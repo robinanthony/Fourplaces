@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvvm:BaseContentPage 
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:mvvm="clr-namespace:Storm.Mvvm.Forms;assembly=Storm.Mvvm.Forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Fourplaces.Models"
+             xmlns:local="clr-namespace:Fourplaces"
+             xmlns:vm="clr-namespace:Fourplaces.ViewModels"
+             x:Class="Fourplaces.AllPlace"
+             x:DataType="vm:AllPlaceViewModel">
+    <NavigationPage.TitleView>
+        <Label Text="{Binding TitleLabel}"/>
+    </NavigationPage.TitleView>
+    
+    <StackLayout Orientation="Vertical">
+        <ActivityIndicator IsRunning="{Binding IsRunning}" IsVisible="{Binding IsVisible}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,-1,-1" x:Name="activityIndicator" VerticalOptions="Center" HorizontalOptions="Center" Color="Azure"/>
+
+        <ListView x:Name="PlaceList" HasUnevenRows="True" SelectionMode="Single" ItemsSource="{Binding Places}" SelectedItem="{Binding CurrentPlace}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Place">
+                    <ViewCell>
+                        <Frame CornerRadius="4"
+                            HasShadow="True"
+                            Margin="4,4,4,4"
+                            Padding="8,4,8,4"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="Start">
+                            <StackLayout HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Start"
+                                Orientation="Horizontal">
+                                
+                                <!--Interieur d'un élément de la liste-->
+                                <Image Grid.Column="0"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center"
+                                       HeightRequest="48"
+                                       WidthRequest="48"
+                                       Source="{Binding ImageSource}"
+                                       />
+                                <StackLayout Orientation="Vertical"
+                                    Grid.Column="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="Center">
+                                    <Label Text="{Binding Title}"
+                                        TextColor="Black"
+                                        LineBreakMode="WordWrap"
+                                        FontSize="20"/>
+                                    <Label Text="{Binding Description}"
+                                           FontSize="10"
+                                           TextColor="Gray"
+                                           MaxLines="3"/>
+                                </StackLayout>
+                                <!--Fin interieur d'un élément de la liste-->
+                                
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</mvvm:BaseContentPage>
