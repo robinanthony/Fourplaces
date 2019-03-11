@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<mvvm:BaseContentPage 
+<TabbedPage
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:mvvm="clr-namespace:Storm.Mvvm.Forms;assembly=Storm.Mvvm.Forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -12,10 +12,10 @@
              x:DataType="vm:FocusPlaceViewModel"
              >
     <NavigationPage.TitleView>
-        <Label Text="{Binding Data.Title}"/>
+        <Label Text="{Binding MaPlace.Title}"/>
     </NavigationPage.TitleView>
 
-    <ScrollView Orientation="Vertical">
+    <mvvm:BaseContentPage Icon="Info_icon.png">
         <StackLayout Orientation="Vertical"  Margin="20,15,20,20">
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
                 <Label Text="Image" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
@@ -23,32 +23,83 @@
                     VerticalOptions="Center"
                     HeightRequest="200"
                     WidthRequest="320"
-                    Source="{Binding Data.ImageSource}"
+                    Source="{Binding MaPlace.ImageSource}"
                 />
             </StackLayout>
-
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
-                <Label Text="Carte" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <myui:BindableMap WidthRequest="320" HeightRequest="200"
-                    x:Name="MyMap"
-                    IsShowingUser="true"
-                    MapType="Hybrid"
-                    MapPosition="{Binding Data.Position}"
-                    MapPins="{Binding Pins}"
-                    HorizontalOptions="Start"
-                    VerticalOptions="Center"
-                 />
-            </StackLayout>
-
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
                 <Label Text="Description" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <Label Text="{Binding Data.Description}"/>
-            </StackLayout>
-
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
-                <Label Text="Commentaires" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <Label Text="In coming soon..."/>
+                <Label Text="{Binding MaPlace.Description}"/>
             </StackLayout>
         </StackLayout>
-    </ScrollView>
-</mvvm:BaseContentPage>
+    </mvvm:BaseContentPage>
+
+    <mvvm:BaseContentPage Icon="Maps_icon.png">
+        <StackLayout Orientation="Vertical"  Margin="20,15,20,20">
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                <Label Text="Carte" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                <myui:BindableMap WidthRequest="320" HeightRequest="320"
+                        x:Name="MyMap"
+                        IsShowingUser="true"
+                        MapType="Hybrid"
+                        MapPosition="{Binding MaPlace.Position}"
+                        MapPins="{Binding Pins}"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                     />
+            </StackLayout>
+        </StackLayout>
+    </mvvm:BaseContentPage>
+
+    <mvvm:BaseContentPage Icon="Comm_icon.png">
+        <StackLayout Orientation="Vertical">
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                <Label Text="Commentaires" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+            </StackLayout>
+
+            <ListView x:Name="CommentaireList" HasUnevenRows="True" ItemsSource="{Binding MaPlace.Commentaires}" SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Commentaire">
+                        <ViewCell>
+                            <Frame CornerRadius="4"
+                            HasShadow="True"
+                            Margin="4,4,4,4"
+                            Padding="8,4,8,4"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="Start">
+                                <StackLayout HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Start"
+                                Orientation="Horizontal">
+
+                                    <!--Interieur d'un élément de la liste-->
+                                    <Image Grid.Column="0"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center"
+                                       HeightRequest="48"
+                                       WidthRequest="48"
+                                       Source="{Binding Auteur.ImageSource}"
+                                       />
+                                    
+                                    <StackLayout Orientation="Vertical"
+                                    Grid.Column="1"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="Center">
+                                        <Label Text="{Binding NomComplet}"
+                                        TextColor="Black"
+                                        LineBreakMode="WordWrap"
+                                        FontSize="20"/>
+                                        <Label Text="{Binding Texte}"
+                                           FontSize="10"
+                                           TextColor="Gray"/>
+                                    </StackLayout>
+                                    <!--Fin interieur d'un élément de la liste-->
+
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </StackLayout>
+    </mvvm:BaseContentPage>
+</TabbedPage>

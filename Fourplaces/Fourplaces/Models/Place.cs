@@ -7,35 +7,47 @@ using Storm.Mvvm;
 using Newtonsoft.Json;
 using System.IO;
 using Xamarin.Forms.Maps;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Fourplaces.Models
 {
     public class Place : NotifierBase
     {
-        private int _idPicture;
+        private int? _idPicture;
         private ImageSource _imageSource;
 
         [JsonProperty(PropertyName = "id")]
-        public long Id { get; set; } // id
+        public long Id { get; set; }
 
         [JsonProperty(PropertyName = "title")]
-        public string Title { get; set; } // title
+        public string Title { get; set; }
 
-        [JsonProperty(PropertyName = "image_id")]
-        public int IdPicture
+        [JsonProperty(PropertyName = "image_id", NullValueHandling = NullValueHandling.Include)]
+        public int? IdPicture
         {
-            get => _idPicture;
+            get
+            {
+                return _idPicture;
+            }
             set
             {
                 _idPicture = value;
                 updatePicture();
             }
-        } // image id
+        }
 
         public async void updatePicture()
         {
-            byte[] stream = await RestService.Rest.loadPicture(IdPicture);
-            ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
+            if (_idPicture == null)
+            {
+                ImageSource = ImageSource.FromFile("no_pic.jpg");
+            }
+            else
+            {
+                byte[] stream = await RestService.Rest.loadPicture(IdPicture);
+                ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
+            }
         }
 
         public ImageSource ImageSource
@@ -43,6 +55,9 @@ namespace Fourplaces.Models
             get => _imageSource;
             set => SetProperty(ref _imageSource, value);
         }
+
+        [JsonProperty(PropertyName = "comments")]
+        public ObservableCollection<Commentaire> Commentaires { get; set; }
 
         [JsonProperty(PropertyName = "description")]
         public string Description { get; set; } // description
@@ -68,6 +83,16 @@ namespace Fourplaces.Models
         public Position Position
         {
             get => new Position(Latitude, Longitude);
+        }
+
+        public int Distance { get; set; }
+
+        public string TexteDistance
+        {
+            get
+            {
+                return "est à " + Distance + " km de vous.";
+            }
         }
     }
 }

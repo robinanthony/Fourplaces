@@ -3,7 +3,10 @@ using Fourplaces.Models;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Diagnostics;
+using Xamarin.Forms;
+using Plugin.Geolocator;
+using System;
+using Plugin.Geolocator.Abstractions;
 
 namespace Fourplaces.ViewModels
 {
@@ -21,10 +24,19 @@ namespace Fourplaces.ViewModels
             set => SetProperty(ref this._titleLabel, value);
         }
 
+        public Position MaLocation { get; set; }
+
         public  ObservableCollection<Place> Places
         {
             get => this._allPlaces;
-            set => SetProperty(ref this._allPlaces, value);
+            set
+            {
+                foreach (Place p in value)
+                {
+                    p.Distance = (int)(p.Latitude + p.Longitude);
+                }
+                SetProperty(ref this._allPlaces, value);
+            }
         }
 
         public AllPlaceViewModel()
@@ -37,9 +49,13 @@ namespace Fourplaces.ViewModels
             await base.OnResume();
             Places = await RestService.Rest.LoadPlaces();
 
+            var res = await CrossGeolocator.Current.GetPositionAsync();
+            MaLocation = new Position(res.Latitude, res.Longitude);
+
             IsVisible = false;
             IsRunning = false;
         }
+
 
         public bool IsVisible
         {
@@ -69,7 +85,7 @@ namespace Fourplaces.ViewModels
 
         public async void OpenFocusPlace(Place place)
         {
-            await NavigationService.PushAsync<FocusPlace>(new Dictionary<string, object>() { { "Data", place} });
+            await NavigationService.PushAsync<FocusPlace>(new Dictionary<string, object>() { { "PlaceId", place.Id} });
         }
     }
 }

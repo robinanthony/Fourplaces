@@ -6,26 +6,39 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms.Maps;
 
 namespace Fourplaces.ViewModels
 {
     class FocusPlaceViewModel : ViewModelBase
     {
-        private Place _data;
+        private long _placeId;
+        private Place _maPlace;
         private IList<Pin> _pins;
 
         [NavigationParameter]
-        public Place Data
+        public long PlaceId
         {
-            get { return _data; }
+            get { return _placeId; }
             set
             {
-                SetProperty(ref _data, value);
+                SetProperty(ref _placeId, value);
+            }
+        }
+
+        public Place MaPlace
+        {
+            get { return _maPlace; }
+            set
+            {
+                SetProperty(ref _maPlace, value);
                 Pins = new ObservableCollection<Pin>();
-                Pins.Add(new Pin() {
-                    Position = Data.Position,
-                    Label = Data.Title});
+                Pins.Add(new Pin()
+                {
+                    Position = MaPlace.Position,
+                    Label = MaPlace.Title
+                });
             }
         }
 
@@ -39,6 +52,20 @@ namespace Fourplaces.ViewModels
             {
                 SetProperty(ref _pins, value);
             }
+        }
+
+        public override async Task OnResume()
+        {
+            await base.OnResume();
+            MaPlace = await RestService.Rest.LoadPlace(PlaceId);
+        }
+
+        public string _titleLabel;
+
+        public string TitleLabel
+        {
+            get => this._titleLabel;
+            set => SetProperty(ref this._titleLabel, value);
         }
     }
 }

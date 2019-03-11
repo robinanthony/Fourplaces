@@ -45,6 +45,10 @@
                                         TextColor="Black"
                                         LineBreakMode="WordWrap"
                                         FontSize="20"/>
+                                    <Label Text="{Binding TexteDistance}"
+                                        TextColor="Gray"
+                                        LineBreakMode="WordWrap"
+                                        FontSize="13"/>
                                     <Label Text="{Binding Description}"
                                            FontSize="10"
                                            TextColor="Gray"

@@ -13,7 +13,7 @@ using Xamarin.Forms.Xaml;
 namespace Fourplaces
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class FocusPlace : BaseContentPage
+	public partial class FocusPlace : TabbedPage
     {
 		public FocusPlace ()
 		{

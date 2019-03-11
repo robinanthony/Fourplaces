@@ -61,11 +61,11 @@ namespace Fourplaces.Models
             return Places;
         }
 
-        public async Task<byte[]> loadPicture(int idPicture)
+        public async Task<byte[]> loadPicture(int? idPicture)
         {
             byte[] stream = null;
 
-            string RestUrl = "http://td-api.julienmialon.com/images/"+idPicture;
+            string RestUrl = "http://td-api.julienmialon.com/images/" + idPicture;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             try
@@ -116,6 +116,33 @@ namespace Fourplaces.Models
             }
 
             return utilisateur;
+        }
+
+        public Place MaPlace { get; private set; }
+
+        public async Task<Place> LoadPlace(long idPlace)
+        {
+            //MaPlace = new Place();
+
+            string RestUrl = "http://td-api.julienmialon.com/places/"+ idPlace;
+            var uri = new Uri(string.Format(RestUrl, string.Empty));
+
+            try
+            {
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    RestResponse<Place> restResponse = JsonConvert.DeserializeObject<RestResponse<Place>>(json);
+                    MaPlace = restResponse.Data;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+            return MaPlace;
         }
     }
 }
