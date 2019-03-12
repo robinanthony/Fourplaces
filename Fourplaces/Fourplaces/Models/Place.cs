@@ -12,7 +12,7 @@ using System.ComponentModel;
 
 namespace Fourplaces.Models
 {
-    public class Place : NotifierBase
+    public class Place : NotifierBase, IComparable
     {
         private int? _idPicture;
         private ImageSource _imageSource;
@@ -33,7 +33,6 @@ namespace Fourplaces.Models
             set
             {
                 _idPicture = value;
-                Console.WriteLine(value);
                 updatePicture();
             }
         }
@@ -48,7 +47,6 @@ namespace Fourplaces.Models
             {
                 byte[] stream = await RestService.Rest.loadPicture(IdPicture);
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
-                Console.WriteLine("Bien chargé !");
             }
         }
 
@@ -70,31 +68,39 @@ namespace Fourplaces.Models
         [JsonProperty(PropertyName = "longitude")]
         public double Longitude { get; set; } // longitude
 
-        public ICommand DeleteCommand { get; set; }
-
-        public Place()
-        {
-            this.DeleteCommand = new Command(DeleteAction);
-        }
-
-        private void DeleteAction(object _)
-        {
-            RestService.Rest.Places.Remove(this);
-        }
-
         public Position Position
         {
             get => new Position(Latitude, Longitude);
         }
 
-        public int Distance { get; set; }
-
-        public string TexteDistance
-        {
+        private int _distance;
+        public int Distance {
             get
             {
-                return "est à " + Distance + " km de vous.";
+                return _distance;
             }
+            set
+            {
+                SetProperty(ref _distance, value);
+                TexteDistance = "est à " + _distance + " km de vous.";
+            }
+        }
+
+        private string _texteDistance;
+        public string TexteDistance
+        {
+            get => _texteDistance;
+            set => SetProperty(ref _texteDistance, value);
+        }
+
+        public int CompareTo(object o)
+        {
+            Place b = (Place)o;
+            if (Distance > b.Distance)
+            {
+                return 1;
+            }
+            return 0;
         }
     }
 }

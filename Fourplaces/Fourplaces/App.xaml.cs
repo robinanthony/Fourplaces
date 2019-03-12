@@ -6,7 +6,6 @@ using Xamarin.Forms.Xaml;
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Fourplaces
 {
-    //public partial class App : Application
     public partial class App : MvvmApplication
     {
         public App() : base(() => new Login())

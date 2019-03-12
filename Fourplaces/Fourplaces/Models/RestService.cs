@@ -31,7 +31,7 @@ namespace Fourplaces.Models
         private RestService()
         {
             this.client = new HttpClient();
-            this.client.MaxResponseContentBufferSize = 256000;
+            this.client.MaxResponseContentBufferSize = 256000 * 2; // Ajout d'un *2 sinon buffer trop petit !
         }
 
         public ObservableCollection<Place> Places { get; private set; }

@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Plugin.Geolocator;
 using System;
-using Plugin.Geolocator.Abstractions;
+using Xamarin.Forms.Maps;
+using System.Linq;
 
 namespace Fourplaces.ViewModels
 {
+
     class AllPlaceViewModel : ViewModelBase
     {
         private string _titleLabel;
@@ -33,7 +35,7 @@ namespace Fourplaces.ViewModels
             {
                 foreach (Place p in value)
                 {
-                    p.Distance = (int)(p.Latitude + p.Longitude);
+                    p.Distance = GetDistanceBetweenPositions(p.Position, MaLocation);
                 }
                 SetProperty(ref this._allPlaces, value);
             }
@@ -86,6 +88,23 @@ namespace Fourplaces.ViewModels
         public async void OpenFocusPlace(Place place)
         {
             await NavigationService.PushAsync<FocusPlace>(new Dictionary<string, object>() { { "PlaceId", place.Id} });
+        }
+
+        private int GetDistanceBetweenPositions( Position source, Position dest)
+        {
+            int R = 6378;
+
+            double SourceLat = GetRadian(source.Latitude);
+            double SourceLong = GetRadian(source.Longitude);
+            double DestLat = GetRadian(dest.Latitude);
+            double DestLong = GetRadian(dest.Longitude);
+
+            return (int)(R * (Math.PI / 2 - Math.Asin(Math.Sin(DestLat) * Math.Sin(SourceLat) + Math.Cos(DestLong - SourceLong) * Math.Cos(DestLat) * Math.Cos(SourceLat))));
+        }
+
+        private double GetRadian(double degree)
+        {
+            return Math.PI * degree / 180;
         }
     }
 }
