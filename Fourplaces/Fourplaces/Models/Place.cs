@@ -33,6 +33,7 @@ namespace Fourplaces.Models
             set
             {
                 _idPicture = value;
+                Console.WriteLine(value);
                 updatePicture();
             }
         }
@@ -47,6 +48,7 @@ namespace Fourplaces.Models
             {
                 byte[] stream = await RestService.Rest.loadPicture(IdPicture);
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
+                Console.WriteLine("Bien chargé !");
             }
         }
 
