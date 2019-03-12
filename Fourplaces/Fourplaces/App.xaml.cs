@@ -9,12 +9,7 @@ namespace Fourplaces
     //public partial class App : Application
     public partial class App : MvvmApplication
     {
-        //public App(): base(() => new AllPlace())
-        //{
-        //    InitializeComponent();
-        //}
-
-        public App(): base(() => new Login())
+        public App() : base(() => new Login())
         {
             InitializeComponent();
         }

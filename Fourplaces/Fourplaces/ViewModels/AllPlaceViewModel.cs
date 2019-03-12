@@ -57,7 +57,6 @@ namespace Fourplaces.ViewModels
             IsRunning = false;
         }
 
-
         public bool IsVisible
         {
             get => _isVisible;
