@@ -14,7 +14,6 @@
     
     <StackLayout Orientation="Vertical">
         <ActivityIndicator IsRunning="{Binding IsRunning}" IsVisible="{Binding IsVisible}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,-1,-1" x:Name="activityIndicator" VerticalOptions="Center" HorizontalOptions="Center" Color="Azure"/>
-
         <ListView x:Name="PlaceList" HasUnevenRows="True" SelectionMode="Single" ItemsSource="{Binding Places}" SelectedItem="{Binding CurrentPlace}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Place">
