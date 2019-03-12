@@ -47,10 +47,11 @@ namespace Fourplaces.ViewModels
         public override async Task OnResume()
         {
             await base.OnResume();
-            Places = await RestService.Rest.LoadPlaces();
 
             var res = await CrossGeolocator.Current.GetPositionAsync();
             MaLocation = new Position(res.Latitude, res.Longitude);
+
+            Places = await RestService.Rest.LoadPlaces();
 
             IsVisible = false;
             IsRunning = false;

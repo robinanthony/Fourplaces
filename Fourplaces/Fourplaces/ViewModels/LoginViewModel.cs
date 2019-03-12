@@ -45,7 +45,7 @@ namespace Fourplaces.ViewModels
         {
             User u = await RestService.Rest.LoadUser(Email, Password);
             Debug.WriteLine(u.Email+" "+u.Password+" "+Token.Ticket.AccessToken);
-            if (Token.Ticket != null)
+            if (Token.Ticket != null) // NEED CHANGER POUR BIEN VERIFIER LA CONNEXION
             {
                 await NavigationService.PushAsync<AllPlace>(new Dictionary<string, object>());
             }

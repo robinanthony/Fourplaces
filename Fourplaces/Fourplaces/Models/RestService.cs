@@ -122,8 +122,6 @@ namespace Fourplaces.Models
 
         public async Task<Place> LoadPlace(long idPlace)
         {
-            //MaPlace = new Place();
-
             string RestUrl = "http://td-api.julienmialon.com/places/"+ idPlace;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
