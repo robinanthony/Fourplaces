@@ -11,7 +11,6 @@ using Plugin.Permissions;
 
 namespace Fourplaces.ViewModels
 {
-
     class AllPlaceViewModel : ViewModelBase
     {
         private string _titleLabel;
@@ -57,7 +56,6 @@ namespace Fourplaces.ViewModels
                 }
                 else
                 {
-                    //Latitude = "Objet null";
                     Console.WriteLine("Erreur, la dernière position connue est nulle ! ");
                     return null;
                 }
@@ -119,12 +117,7 @@ namespace Fourplaces.ViewModels
         {
             await base.OnResume();
 
-            // TODO : Semble ne pas fonctionner sur une version >= 23 ...
-            // Une erreur concernant un manque de permission apparait lors de l'appel de fonction.
-            // Comment puis-je résoudre ça ? '.'
-
-            // Voir https://bitbucket.org/WhyNotPH/xamarinproject/src/master/projet/VIEWMODELS/VMLieu.cs : peut être un truc à tirer d'interessant
-            await GetLocation();  
+            await GetLocation();
 
             Places = await RestService.Rest.LoadPlaces(MaLocation);
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -43,12 +44,25 @@ namespace Fourplaces.ViewModels
 
         public async void OpenFocusPlace()
         {
-            User u = await RestService.Rest.LoadUser(Email, Password);
-            Debug.WriteLine(u.Email+" "+u.Password+" "+Token.Ticket.AccessToken);
-            if (Token.Ticket != null) // NEED CHANGER POUR BIEN VERIFIER LA CONNEXION
+            Console.WriteLine(Email);
+            Console.WriteLine(Password);
+            await RestService.Rest.LogIn(Email, Password);
+
+            if (Token.IsInit())
             {
+                Password = "";
                 await NavigationService.PushAsync<AllPlace>(new Dictionary<string, object>());
             }
+            else
+            {
+                // TODO : Qu'est-ce que je fais ici ?
+            }
+        }
+
+        public override async Task OnResume()
+        {
+            await base.OnResume();
+            Token.Destroy();
         }
     }
 }

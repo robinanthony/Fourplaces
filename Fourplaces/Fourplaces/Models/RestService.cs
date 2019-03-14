@@ -59,7 +59,7 @@ namespace Fourplaces.Models
         {
             Places = new ObservableCollection<Place>();
 
-            string RestUrl = "http://td-api.julienmialon.com/places";
+            string RestUrl = "https://td-api.julienmialon.com/places";
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             try
@@ -78,7 +78,6 @@ namespace Fourplaces.Models
                         needOrder.Add(p);
                     }
                     needOrder.Sort(Place.Comparaison);
-                    // TODO : Trier l'ObervableCollection<Place> par apport à la Distance.
                     Places = new ObservableCollection<Place>(needOrder);
                 }
             }
@@ -94,7 +93,7 @@ namespace Fourplaces.Models
         {
             byte[] stream = null;
 
-            string RestUrl = "http://td-api.julienmialon.com/images/" + idPicture;
+            string RestUrl = "https://td-api.julienmialon.com/images/" + idPicture;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             try
@@ -117,11 +116,11 @@ namespace Fourplaces.Models
             return stream;
         }
 
-        public async Task<User> LoadUser(string email, string password)
+        public async Task LogIn(string email, string password)
         {
             User utilisateur = new User(email, password);
 
-            string RestUrl = "http://td-api.julienmialon.com/auth/login";
+            string RestUrl = "https://td-api.julienmialon.com/auth/login";
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             var stringContent = new StringContent(utilisateur.ToJson(), Encoding.UTF8, "application/json");
@@ -129,29 +128,29 @@ namespace Fourplaces.Models
             try
             {
                 var response = await client.PostAsync(uri, stringContent);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<Token> restResponse = JsonConvert.DeserializeObject<RestResponse<Token>>(json);
+                    Token.Ticket = restResponse.Data;
                 }
                 else
                 {
-                    Token.Ticket.AccessToken = null;
+                    Token.Destroy();
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
-
-            return utilisateur;
         }
 
         public Place MaPlace { get; private set; }
 
         public async Task<Place> LoadPlace(long idPlace)
         {
-            string RestUrl = "http://td-api.julienmialon.com/places/"+ idPlace;
+            string RestUrl = "https://td-api.julienmialon.com/places/"+ idPlace;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             try

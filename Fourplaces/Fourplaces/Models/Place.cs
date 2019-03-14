@@ -33,11 +33,11 @@ namespace Fourplaces.Models
             set
             {
                 _idPicture = value;
-                updatePicture();
+                UpdatePicture();
             }
         }
 
-        public async void updatePicture()
+        private async void UpdatePicture()
         {
             if (_idPicture == null)
             {
@@ -60,13 +60,13 @@ namespace Fourplaces.Models
         public ObservableCollection<Commentaire> Commentaires { get; set; }
 
         [JsonProperty(PropertyName = "description")]
-        public string Description { get; set; } // description
+        public string Description { get; set; }
 
         [JsonProperty(PropertyName = "latitude")]
-        public double Latitude { get; set; } // latitude
+        public double Latitude { get; set; }
 
         [JsonProperty(PropertyName = "longitude")]
-        public double Longitude { get; set; } // longitude
+        public double Longitude { get; set; }
 
         public Position Position
         {

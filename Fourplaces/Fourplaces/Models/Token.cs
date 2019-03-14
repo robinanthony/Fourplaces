@@ -33,11 +33,25 @@ namespace Fourplaces.Models
                 }
                 return _token;
             }
+            set =>  _token = value;
         }
 
         private Token()
+        {   
+        }
+
+        public static void Destroy()
         {
-            
+            _token = null;
+        }
+
+        public static bool IsInit()
+        {
+            if (_token == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -15,10 +15,10 @@
 
     <StackLayout VerticalOptions="StartAndExpand">
         <Label Text="E-mail" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-        <Entry x:Name="usernameEntry" Placeholder="email" Margin="0,0,0,5" Text="{Binding Email}"/>
+        <Entry x:Name="usernameEntry" Placeholder="email" Margin="0,0,0,5" Text="{Binding Email, Mode=TwoWay}"/>
 
         <Label Text="Mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-        <Entry x:Name="passwordEntry" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding Password}"/>
+        <Entry x:Name="passwordEntry" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding Password, Mode=TwoWay}"/>
 
         <Button Text="Se connecter" Command="{Binding LoginCommand}"></Button>
     </StackLayout>
