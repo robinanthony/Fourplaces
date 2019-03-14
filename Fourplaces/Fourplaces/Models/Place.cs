@@ -12,7 +12,7 @@ using System.ComponentModel;
 
 namespace Fourplaces.Models
 {
-    public class Place : NotifierBase, IComparable
+    public class Place : NotifierBase
     {
         private int? _idPicture;
         private ImageSource _imageSource;
@@ -93,14 +93,17 @@ namespace Fourplaces.Models
             set => SetProperty(ref _texteDistance, value);
         }
 
-        public int CompareTo(object o)
+        public static int Comparaison(Place p1, Place p2)
         {
-            Place b = (Place)o;
-            if (Distance > b.Distance)
+            if (p1.Distance == p2.Distance)
+            {
+                return 0;
+            }
+            if (p1.Distance > p2.Distance)
             {
                 return 1;
             }
-            return 0;
+            return -1;
         }
     }
 }

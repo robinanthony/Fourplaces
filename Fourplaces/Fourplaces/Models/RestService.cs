@@ -38,6 +38,23 @@ namespace Fourplaces.Models
 
         public ObservableCollection<Place> Places { get; private set; }
 
+        private int GetDistanceBetweenPositions(Position source, Position dest)
+        {
+            int R = 6378;
+
+            double SourceLat = GetRadian(source.Latitude);
+            double SourceLong = GetRadian(source.Longitude);
+            double DestLat = GetRadian(dest.Latitude);
+            double DestLong = GetRadian(dest.Longitude);
+
+            return (int)(R * (Math.PI / 2 - Math.Asin(Math.Sin(DestLat) * Math.Sin(SourceLat) + Math.Cos(DestLong - SourceLong) * Math.Cos(DestLat) * Math.Cos(SourceLat))));
+        }
+
+        private double GetRadian(double degree)
+        {
+            return Math.PI * degree / 180;
+        }
+
         public async Task<ObservableCollection<Place>> LoadPlaces(Position MaLocation)
         {
             Places = new ObservableCollection<Place>();
@@ -53,8 +70,16 @@ namespace Fourplaces.Models
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<ObservableCollection<Place>> restResponse = JsonConvert.DeserializeObject<RestResponse<ObservableCollection<Place>>>(json);
 
+                    List<Place> needOrder = new List<Place>();
+
+                    foreach (Place p in restResponse.Data)
+                    {
+                        p.Distance = GetDistanceBetweenPositions(p.Position, MaLocation);
+                        needOrder.Add(p);
+                    }
+                    needOrder.Sort(Place.Comparaison);
                     // TODO : Trier l'ObervableCollection<Place> par apport à la Distance.
-                    Places = restResponse.Data;
+                    Places = new ObservableCollection<Place>(needOrder);
                 }
             }
             catch (Exception e)
