@@ -7,7 +7,7 @@ using Xamarin.Forms;
 using Plugin.Geolocator;
 using System;
 using Xamarin.Forms.Maps;
-using System.Linq;
+
 
 namespace Fourplaces.ViewModels
 {
@@ -33,6 +33,7 @@ namespace Fourplaces.ViewModels
             get => this._allPlaces;
             set
             {
+                // TODO : Pas très propre. Se serait mieux de faire cela dans la fonction RestService.LoadPlaces(Position MaLocation) ...
                 foreach (Place p in value)
                 {
                     p.Distance = GetDistanceBetweenPositions(p.Position, MaLocation);
@@ -50,10 +51,15 @@ namespace Fourplaces.ViewModels
         {
             await base.OnResume();
 
+            // TODO : Semble ne pas fonctionner sur une version >= 23 ...
+            // Une erreur concernant un manque de permission apparait lors de l'appel de fonction.
+            // Comment puis-je résoudre ça ? '.'
+
+            // Voir https://bitbucket.org/WhyNotPH/xamarinproject/src/master/projet/VIEWMODELS/VMLieu.cs : peut être un truc à tirer d'interessant
             var res = await CrossGeolocator.Current.GetPositionAsync();
             MaLocation = new Position(res.Latitude, res.Longitude);
 
-            Places = await RestService.Rest.LoadPlaces();
+            Places = await RestService.Rest.LoadPlaces(MaLocation);
 
             IsVisible = false;
             IsRunning = false;

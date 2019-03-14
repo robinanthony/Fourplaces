@@ -7,6 +7,8 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms.Maps;
+using System.Linq;
 
 namespace Fourplaces.Models
 {
@@ -31,12 +33,12 @@ namespace Fourplaces.Models
         private RestService()
         {
             this.client = new HttpClient();
-            this.client.MaxResponseContentBufferSize = 256000 * 2; // Ajout d'un *2 sinon buffer trop petit !
+            //this.client.MaxResponseContentBufferSize = 256000 * 2; // Mis en commentaire pour que le buffer puisse grandir autant que besoin.
         }
 
         public ObservableCollection<Place> Places { get; private set; }
 
-        public async Task<ObservableCollection<Place>> LoadPlaces()
+        public async Task<ObservableCollection<Place>> LoadPlaces(Position MaLocation)
         {
             Places = new ObservableCollection<Place>();
 
@@ -50,6 +52,8 @@ namespace Fourplaces.Models
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<ObservableCollection<Place>> restResponse = JsonConvert.DeserializeObject<RestResponse<ObservableCollection<Place>>>(json);
+
+                    // TODO : Trier l'ObervableCollection<Place> par apport à la Distance.
                     Places = restResponse.Data;
                 }
             }
