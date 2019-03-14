@@ -50,13 +50,14 @@ namespace Fourplaces.ViewModels
 
             if (Token.IsInit())
             {
-                Password = "";
                 await NavigationService.PushAsync<AllPlace>(new Dictionary<string, object>());
             }
             else
             {
-                // TODO : Qu'est-ce que je fais ici ?
+                await Application.Current.MainPage.DisplayAlert("Identifiants éronnés", "Vos identifiants sont invalides. Veuillez réiterer votre demande.", "OK");
             }
+            // Dans tous les cas je vide le champ password.
+            Password = "";
         }
 
         public override async Task OnResume()

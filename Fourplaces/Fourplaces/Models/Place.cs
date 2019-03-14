@@ -28,11 +28,11 @@ namespace Fourplaces.Models
         {
             get
             {
-                return _idPicture;
+                return this._idPicture;
             }
             set
             {
-                _idPicture = value;
+                this._idPicture = value;
                 UpdatePicture();
             }
         }
@@ -52,7 +52,7 @@ namespace Fourplaces.Models
 
         public ImageSource ImageSource
         {
-            get => _imageSource;
+            get => this._imageSource;
             set => SetProperty(ref _imageSource, value);
         }
 
@@ -77,20 +77,20 @@ namespace Fourplaces.Models
         public int Distance {
             get
             {
-                return _distance;
+                return this._distance;
             }
             set
             {
-                SetProperty(ref _distance, value);
-                TexteDistance = "est à " + _distance + " km de vous.";
+                SetProperty(ref this._distance, value);
+                TexteDistance = "est à " + this._distance + " km de vous.";
             }
         }
 
         private string _texteDistance;
         public string TexteDistance
         {
-            get => _texteDistance;
-            set => SetProperty(ref _texteDistance, value);
+            get => this._texteDistance;
+            set => SetProperty(ref this._texteDistance, value);
         }
 
         public static int Comparaison(Place p1, Place p2)
