@@ -13,6 +13,7 @@ namespace Fourplaces.ViewModels
     class LoginViewModel : ViewModelBase
     {
         public ICommand LoginCommand{ get; set; }
+        public ICommand SigninCommand { get; set; }
         public string TitleLabel { get; set; }
 
 
@@ -34,6 +35,7 @@ namespace Fourplaces.ViewModels
         public LoginViewModel()
         {
             LoginCommand = new Command(LoginClicked);
+            SigninCommand = new Command(SigninClicked);
             TitleLabel = "Veuillez vous connecter";
         }
 
@@ -42,10 +44,8 @@ namespace Fourplaces.ViewModels
             OpenFocusPlace();
         }
 
-        public async void OpenFocusPlace()
+        private async void OpenFocusPlace()
         {
-            Console.WriteLine(Email);
-            Console.WriteLine(Password);
             await RestService.Rest.LogIn(Email, Password);
 
             if (Token.IsInit())
@@ -58,6 +58,16 @@ namespace Fourplaces.ViewModels
             }
             // Dans tous les cas je vide le champ password.
             Password = "";
+        }
+
+        private void SigninClicked(object _)
+        {
+            OpenSignin();
+        }
+
+        private async void OpenSignin()
+        {
+            await NavigationService.PushAsync<Signin>(new Dictionary<string, object>());
         }
 
         public override async Task OnResume()

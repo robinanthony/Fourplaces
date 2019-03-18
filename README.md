@@ -1,13 +1,16 @@
-# Fourplaces
+﻿# Fourplaces
 A student's project with Xamarin technology.
 
 # TODO List
+    - Ajouter sur la liste de toutes les places une maj si on va vers le haut "dans le vide"
 
-    - Ajouter l'ajout des commentaires
+    - Ajouter sur les pages allPlace et focusPlace les boutons d'ajouts liés.
 
-    - Ajouter l'ajout d'une nouvelle place avec toutes les infos liées
+    - Mettre à jour l'ecran d'ajout des commentaires
 
-    - Ajouter un ecran d'inscription
+    - Mettre à jour l'ecran d'ajout d'une nouvelle place avec toutes les infos liées
+
+    - Mettre à jour l'ecran d'inscription
 
     - Ajouter un ecran pour voir son profil
 

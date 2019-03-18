@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:Fourplaces.Models"
              xmlns:local="clr-namespace:Fourplaces"
              xmlns:vm="clr-namespace:Fourplaces.ViewModels"
+             xmlns:myUI="clr-namespace:Fourplaces.MyUI"
              x:Class="Fourplaces.Login"
              x:DataType="vm:LoginViewModel"
              >
@@ -13,14 +14,24 @@
         <Label Text="{Binding TitleLabel}"/>
     </NavigationPage.TitleView>
 
-    <StackLayout VerticalOptions="StartAndExpand">
-        <Label Text="E-mail" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-        <Entry x:Name="usernameEntry" Placeholder="email" Margin="0,0,0,5" Text="{Binding Email, Mode=TwoWay}"/>
+    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <StackLayout VerticalOptions="StartAndExpand"  HorizontalOptions="FillAndExpand">
 
-        <Label Text="Mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-        <Entry x:Name="passwordEntry" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding Password, Mode=TwoWay}"/>
+            <Label Text="E-mail" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+            <Entry x:Name="usernameEntry" Placeholder="email" Margin="0,0,0,5" Text="{Binding Email, Mode=TwoWay}"/>
 
-        <Button Text="Se connecter" Command="{Binding LoginCommand}"></Button>
+            <Label Text="Mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+            <Entry x:Name="passwordEntry" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding Password, Mode=TwoWay}"/>
+
+            <Button Text="Se connecter" Command="{Binding LoginCommand}"></Button>
+        </StackLayout>
+
+        <AbsoluteLayout>
+            <myUI:FloatingButton Source="IconFAB.png"
+                                        Command="{Binding SigninCommand}"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        AbsoluteLayout.LayoutBounds="1, 1, 0.25, 0.25"
+                                        Margin="15, 0, 0, 15"/>
+        </AbsoluteLayout>
     </StackLayout>
-
 </mvvm:BaseContentPage>

@@ -5,12 +5,12 @@ using Xamarin.Forms.Xaml;
 namespace Fourplaces
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class Login : BaseContentPage
-    {
-		public Login ()
+	public partial class Signin : BaseContentPage
+	{
+		public Signin ()
 		{
-			InitializeComponent();
-            BindingContext = new LoginViewModel();
+            InitializeComponent();
+            BindingContext = new SigninViewModel();
         }
-    }
+	}
 }
