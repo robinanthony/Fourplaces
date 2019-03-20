@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace Fourplaces.ViewModels
@@ -16,6 +18,23 @@ namespace Fourplaces.ViewModels
         private long _placeId;
         private Place _maPlace;
         private IList<Pin> _pins;
+
+        public ICommand AddCommentaireCommand { get; set; }
+
+        public FocusPlaceViewModel()
+        {
+            this.AddCommentaireCommand = new Command(AddCommentaireClicked);
+        }
+
+        private void AddCommentaireClicked()
+        {
+            OpenAddCommentaire();
+        }
+
+        private async void OpenAddCommentaire()
+        {
+            await NavigationService.PushAsync<NewCommentaire>(new Dictionary<string, object>());
+        }
 
         [NavigationParameter]
         public long PlaceId

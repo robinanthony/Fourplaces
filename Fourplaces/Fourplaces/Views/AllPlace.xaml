@@ -6,63 +6,73 @@
              xmlns:models="clr-namespace:Fourplaces.Models"
              xmlns:local="clr-namespace:Fourplaces"
              xmlns:vm="clr-namespace:Fourplaces.ViewModels"
+             xmlns:myUI="clr-namespace:Fourplaces.MyUI"
              x:Class="Fourplaces.AllPlace"
              x:DataType="vm:AllPlaceViewModel">
     <NavigationPage.TitleView>
         <Label Text="{Binding TitleLabel}"/>
     </NavigationPage.TitleView>
-    
-    <StackLayout Orientation="Vertical">
 
-        <Label Text="Une connexion internet ainsi que la géolocalisation sont nécessaires pour charger cette page." IsVisible="{Binding IsVisible}" ></Label>
-        <ActivityIndicator IsRunning="{Binding IsRunning}" IsVisible="{Binding IsVisible}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,-1,-1" x:Name="activityIndicator" VerticalOptions="Center" HorizontalOptions="Center" Color="Azure"/>
-        
-        <ListView x:Name="PlaceList" HasUnevenRows="True" SelectionMode="Single" ItemsSource="{Binding Places}" SelectedItem="{Binding CurrentPlace}" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:Place">
-                    <ViewCell>
-                        <Frame CornerRadius="4"
+    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Label Text="Une connexion internet ainsi que la géolocalisation sont nécessaires pour charger cette page." IsVisible="{Binding IsVisible}" ></Label>
+            <ActivityIndicator IsRunning="{Binding IsRunning}" IsVisible="{Binding IsVisible}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,-1,-1" x:Name="activityIndicator" VerticalOptions="Center" HorizontalOptions="Center" Color="Azure"/>
+
+            <ListView x:Name="PlaceList" HasUnevenRows="True" SelectionMode="Single" ItemsSource="{Binding Places}" SelectedItem="{Binding CurrentPlace}" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Place">
+                        <ViewCell>
+                            <Frame CornerRadius="4"
                             HasShadow="True"
                             Margin="4,4,4,4"
                             Padding="8,4,8,4"
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="Start">
-                            <StackLayout HorizontalOptions="FillAndExpand"
+                                <StackLayout HorizontalOptions="FillAndExpand"
                                 VerticalOptions="Start"
                                 Orientation="Horizontal">
-                                
-                                <!--Interieur d'un élément de la liste-->
-                                <Image Grid.Column="0"
+
+                                    <!--Interieur d'un élément de la liste-->
+                                    <Image Grid.Column="0"
                                        HorizontalOptions="Start"
                                        VerticalOptions="Center"
                                        HeightRequest="48"
                                        WidthRequest="48"
                                        Source="{Binding ImageSource}"
                                        />
-                                <StackLayout Orientation="Vertical"
+                                    <StackLayout Orientation="Vertical"
                                     Grid.Column="1"
                                     HorizontalOptions="FillAndExpand"
                                     VerticalOptions="Center">
-                                    <Label Text="{Binding Title}"
+                                        <Label Text="{Binding Title}"
                                         TextColor="Black"
                                         LineBreakMode="WordWrap"
                                         FontSize="20"/>
-                                    <Label Text="{Binding TexteDistance}"
+                                        <Label Text="{Binding TexteDistance}"
                                         TextColor="Gray"
                                         LineBreakMode="WordWrap"
                                         FontSize="13"/>
-                                    <Label Text="{Binding Description}"
+                                        <Label Text="{Binding Description}"
                                            FontSize="10"
                                            TextColor="Gray"
                                            MaxLines="3"/>
+                                    </StackLayout>
+                                    <!--Fin interieur d'un élément de la liste-->
+
                                 </StackLayout>
-                                <!--Fin interieur d'un élément de la liste-->
-                                
-                            </StackLayout>
-                        </Frame>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <AbsoluteLayout>
+                <myUI:FloatingButton Source="IconFAB.png"
+                                        Command="{Binding AddPlaceCommand}"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        AbsoluteLayout.LayoutBounds="1, 1, 0.25, 0.25"
+                                        Margin="15, 0, 0, 15"/>
+            </AbsoluteLayout>
+        </StackLayout>
     </StackLayout>
 </mvvm:BaseContentPage>

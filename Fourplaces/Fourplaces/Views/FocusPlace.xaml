@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:Fourplaces"
              xmlns:vm="clr-namespace:Fourplaces.ViewModels"
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
-             xmlns:myui="clr-namespace:Fourplaces.MyUI"
+             xmlns:myUI="clr-namespace:Fourplaces.MyUI"
              x:Class="Fourplaces.FocusPlace"
              x:DataType="vm:FocusPlaceViewModel"
              >
@@ -37,7 +37,7 @@
         <StackLayout Orientation="Vertical"  Margin="20,15,20,20">
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
                 <Label Text="Carte" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <myui:BindableMap WidthRequest="320" HeightRequest="320"
+                <myUI:BindableMap WidthRequest="320" HeightRequest="320"
                         x:Name="MyMap"
                         IsShowingUser="true"
                         MapType="Hybrid"
@@ -56,49 +56,59 @@
                 <Label Text="Commentaires" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             </StackLayout>
 
-            <ListView x:Name="CommentaireList" HasUnevenRows="True" ItemsSource="{Binding MaPlace.Commentaires}" SelectionMode="None">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Commentaire">
-                        <ViewCell>
-                            <Frame CornerRadius="4"
-                            HasShadow="True"
-                            Margin="4,4,4,4"
-                            Padding="8,4,8,4"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="Start">
-                                <StackLayout HorizontalOptions="FillAndExpand"
-                                VerticalOptions="Start"
-                                Orientation="Horizontal">
+            <StackLayout>
+                <ListView x:Name="CommentaireList" HasUnevenRows="True" ItemsSource="{Binding MaPlace.Commentaires}" SelectionMode="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Commentaire">
+                            <ViewCell>
+                                <Frame CornerRadius="4"
+                                HasShadow="True"
+                                Margin="4,4,4,4"
+                                Padding="8,4,8,4"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="Start">
+                                    <StackLayout HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="Start"
+                                    Orientation="Horizontal">
 
-                                    <!--Interieur d'un élément de la liste-->
-                                    <Image Grid.Column="0"
-                                       HorizontalOptions="Start"
-                                       VerticalOptions="Center"
-                                       HeightRequest="48"
-                                       WidthRequest="48"
-                                       Source="{Binding Auteur.ImageSource}"
-                                       />
+                                        <!--Interieur d'un élément de la liste-->
+                                        <Image Grid.Column="0"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Center"
+                                           HeightRequest="48"
+                                           WidthRequest="48"
+                                           Source="{Binding Auteur.ImageSource}"
+                                           />
                                     
-                                    <StackLayout Orientation="Vertical"
-                                    Grid.Column="1"
-                                    HorizontalOptions="FillAndExpand"
-                                    VerticalOptions="Center">
-                                        <Label Text="{Binding NomComplet}"
-                                        TextColor="Black"
-                                        LineBreakMode="WordWrap"
-                                        FontSize="20"/>
-                                        <Label Text="{Binding Texte}"
-                                           FontSize="10"
-                                           TextColor="Gray"/>
-                                    </StackLayout>
-                                    <!--Fin interieur d'un élément de la liste-->
+                                        <StackLayout Orientation="Vertical"
+                                        Grid.Column="1"
+                                        HorizontalOptions="FillAndExpand"
+                                        VerticalOptions="Center">
+                                            <Label Text="{Binding NomComplet}"
+                                            TextColor="Black"
+                                            LineBreakMode="WordWrap"
+                                            FontSize="20"/>
+                                            <Label Text="{Binding Texte}"
+                                               FontSize="10"
+                                               TextColor="Gray"/>
+                                        </StackLayout>
+                                        <!--Fin interieur d'un élément de la liste-->
 
-                                </StackLayout>
-                            </Frame>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+
+            <AbsoluteLayout>
+                <myUI:FloatingButton Source="IconFAB.png"
+                                        Command="{Binding AddCommentaireCommand}"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        AbsoluteLayout.LayoutBounds="1, 1, 0.25, 0.25"
+                                        Margin="15, 0, 0, 15"/>
+            </AbsoluteLayout>
 
         </StackLayout>
     </mvvm:BaseContentPage>

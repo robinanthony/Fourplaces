@@ -23,6 +23,8 @@ namespace Fourplaces.ViewModels
         public ICommand RefreshCommand { get; set; }
         private bool _isRefreshing = false;
 
+        public ICommand AddPlaceCommand { get; set; }
+
         public string TitleLabel
         {
             get => this._titleLabel;
@@ -44,6 +46,7 @@ namespace Fourplaces.ViewModels
         {
             this.TitleLabel = "Tous les lieux";
             this.RefreshCommand = new Command(RefreshClicked);
+            this.AddPlaceCommand = new Command(AddPlaceClicked);
         }
 
         private void RefreshClicked()
@@ -56,6 +59,16 @@ namespace Fourplaces.ViewModels
         {
             await GetLocation();
             Places = await RestService.Rest.LoadPlaces(MaLocation);
+        }
+
+        private void AddPlaceClicked()
+        {
+            OpenAddPlace();
+        }
+
+        private async void OpenAddPlace()
+        {
+            await NavigationService.PushAsync<NewPlace>(new Dictionary<string, object>());
         }
 
         private async Task<Plugin.Geolocator.Abstractions.Position> GetCurrentLocation()
