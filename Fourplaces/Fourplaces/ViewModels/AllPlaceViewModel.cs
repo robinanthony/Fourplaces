@@ -8,6 +8,7 @@ using Plugin.Geolocator;
 using System;
 using Xamarin.Forms.Maps;
 using Plugin.Permissions;
+using System.Windows.Input;
 
 namespace Fourplaces.ViewModels
 {
@@ -18,6 +19,9 @@ namespace Fourplaces.ViewModels
 
         private bool _isVisible = true;
         private bool _isRunning = true;
+
+        public ICommand RefreshCommand { get; set; }
+        private bool _isRefreshing = false;
 
         public string TitleLabel
         {
@@ -39,6 +43,19 @@ namespace Fourplaces.ViewModels
         public AllPlaceViewModel()
         {
             this.TitleLabel = "Tous les lieux";
+            this.RefreshCommand = new Command(RefreshClicked);
+        }
+
+        private void RefreshClicked()
+        {
+            RefreshPlaces();
+            IsRefreshing = false;
+        }
+
+        private async void RefreshPlaces()
+        {
+            await GetLocation();
+            Places = await RestService.Rest.LoadPlaces(MaLocation);
         }
 
         private async Task<Plugin.Geolocator.Abstractions.Position> GetCurrentLocation()
@@ -136,6 +153,12 @@ namespace Fourplaces.ViewModels
             get => _isRunning;
             set => SetProperty(ref _isRunning, value);
         }
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+
 
         private Place _currentPlace;
 

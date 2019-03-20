@@ -16,7 +16,6 @@ namespace Fourplaces.ViewModels
         public ICommand SigninCommand { get; set; }
         public string TitleLabel { get; set; }
 
-
         public string _email;
         public string _password;
 

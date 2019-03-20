@@ -2,7 +2,7 @@
 A student's project with Xamarin technology.
 
 # TODO List
-    - Ajouter sur la liste de toutes les places une maj si on va vers le haut "dans le vide"
+    - Ajouter sur la liste des commentaires une maj si on va vers le haut "dans le vide"
 
     - Ajouter sur les pages allPlace et focusPlace les boutons d'ajouts liés.
 

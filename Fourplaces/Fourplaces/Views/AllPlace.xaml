@@ -17,7 +17,7 @@
         <Label Text="Une connexion internet ainsi que la géolocalisation sont nécessaires pour charger cette page." IsVisible="{Binding IsVisible}" ></Label>
         <ActivityIndicator IsRunning="{Binding IsRunning}" IsVisible="{Binding IsVisible}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,-1,-1" x:Name="activityIndicator" VerticalOptions="Center" HorizontalOptions="Center" Color="Azure"/>
         
-        <ListView x:Name="PlaceList" HasUnevenRows="True" SelectionMode="Single" ItemsSource="{Binding Places}" SelectedItem="{Binding CurrentPlace}">
+        <ListView x:Name="PlaceList" HasUnevenRows="True" SelectionMode="Single" ItemsSource="{Binding Places}" SelectedItem="{Binding CurrentPlace}" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Place">
                     <ViewCell>
