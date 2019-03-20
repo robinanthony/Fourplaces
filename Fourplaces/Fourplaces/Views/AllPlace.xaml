@@ -73,6 +73,7 @@
                                         AbsoluteLayout.LayoutBounds="1, 1, 0.25, 0.25"
                                         Margin="15, 0, 0, 15"/>
             </AbsoluteLayout>
+            
         </StackLayout>
     </StackLayout>
 </mvvm:BaseContentPage>

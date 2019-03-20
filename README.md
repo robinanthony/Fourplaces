@@ -12,4 +12,4 @@ A student's project with Xamarin technology.
     - Ajouter un ecran permettant de modifier son profil
     - Ajouter un ecran permettant de modifier son mdp
 
-    - Revoir la mise en page XAML des pages : Login, AllPlace et FocusPlace (partie commentaires)
+    - Revoir la mise en page XAML de TOUTES les pages (pour qu'elles soient bien en format portrait COMME paysage)
