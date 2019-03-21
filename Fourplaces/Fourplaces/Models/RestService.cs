@@ -3,18 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms.Maps;
-using System.Linq;
 
 namespace Fourplaces.Models
 {
     class RestService
     {
-        HttpClient client;
+        private HttpClient client;
 
         private static RestService _rest;
 
@@ -35,9 +33,7 @@ namespace Fourplaces.Models
             this.client = new HttpClient();
             //this.client.MaxResponseContentBufferSize = 256000 * 2; // Mis en commentaire pour que le buffer puisse grandir autant que besoin.
         }
-
-        public ObservableCollection<Place> Places { get; private set; }
-
+        
         private int GetDistanceBetweenPositions(Position source, Position dest)
         {
             int R = 6378;
@@ -57,7 +53,7 @@ namespace Fourplaces.Models
 
         public async Task<ObservableCollection<Place>> LoadPlaces(Position MaLocation)
         {
-            Places = new ObservableCollection<Place>();
+            ObservableCollection<Place> _places = new ObservableCollection<Place>();
 
             string RestUrl = "https://td-api.julienmialon.com/places";
             var uri = new Uri(string.Format(RestUrl, string.Empty));
@@ -78,18 +74,17 @@ namespace Fourplaces.Models
                         needOrder.Add(p);
                     }
                     needOrder.Sort(Place.Comparaison);
-                    Places = new ObservableCollection<Place>(needOrder);
+                    _places = new ObservableCollection<Place>(needOrder);
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
-
-            return Places;
+            return _places;
         }
 
-        public async Task<byte[]> loadPicture(int? idPicture)
+        public async Task<byte[]> LoadPicture(int? idPicture)
         {
             byte[] stream = null;
 
@@ -123,7 +118,7 @@ namespace Fourplaces.Models
             string RestUrl = "https://td-api.julienmialon.com/auth/login";
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
-            var stringContent = new StringContent(utilisateur.ToJson(), Encoding.UTF8, "application/json");
+            var stringContent = new StringContent(JsonConvert.SerializeObject(utilisateur), Encoding.UTF8, "application/json");
 
             try
             {
@@ -145,8 +140,8 @@ namespace Fourplaces.Models
                 Debug.WriteLine(e.Message);
             }
         }
-
-        public Place MaPlace { get; private set; }
+        
+        private Place maPlace;
 
         public async Task<Place> LoadPlace(long idPlace)
         {
@@ -160,16 +155,46 @@ namespace Fourplaces.Models
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<Place> restResponse = JsonConvert.DeserializeObject<RestResponse<Place>>(json);
-                    MaPlace = restResponse.Data;
+                    maPlace = restResponse.Data;
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
+            return maPlace;
+        }
 
-            return MaPlace;
+        public async Task<Boolean> SignIn(string email, string password, string firstName, string lastName)
+        {
+            User utilisateur = new User(email, password, firstName, lastName);
+
+            string RestUrl = "https://td-api.julienmialon.com/auth/register";
+            var uri = new Uri(string.Format(RestUrl, string.Empty));
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(utilisateur), Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync(uri, stringContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    RestResponse<Token> restResponse = JsonConvert.DeserializeObject<RestResponse<Token>>(json);
+                    Token.Ticket = restResponse.Data;
+                    return true;
+                }
+                else
+                {
+                    Token.Destroy();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return false;
         }
     }
 }
-;

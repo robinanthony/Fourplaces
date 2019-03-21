@@ -26,10 +26,10 @@
             <Entry x:Name="passwordEntryTwo" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding PasswordTwo, Mode=TwoWay}"/>
 
             <Label Text="Prenom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-            <Entry x:Name="prenomEntry" Placeholder="prenom" Margin="0,0,0,5" Text="{Binding Prenom, Mode=TwoWay}"/>
+            <Entry x:Name="prenomEntry" Placeholder="prenom" Margin="0,0,0,5" Text="{Binding FirstName, Mode=TwoWay}"/>
 
             <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-            <Entry x:Name="nomEntry" Placeholder="nom" Margin="0,0,0,5" Text="{Binding Nom, Mode=TwoWay}"/>
+            <Entry x:Name="nomEntry" Placeholder="nom" Margin="0,0,0,5" Text="{Binding LastName, Mode=TwoWay}"/>
 
             <Button Text="S'inscrire" Command="{Binding SigninCommand}"></Button>
         </StackLayout>

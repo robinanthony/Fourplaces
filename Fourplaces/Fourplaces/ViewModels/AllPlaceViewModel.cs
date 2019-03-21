@@ -118,7 +118,6 @@ namespace Fourplaces.ViewModels
                     }
                 }
 
-
                 if (status == Plugin.Permissions.Abstractions.PermissionStatus.Granted)
                 {
                     myPos = await GetCurrentLocation();
@@ -166,12 +165,12 @@ namespace Fourplaces.ViewModels
             get => _isRunning;
             set => SetProperty(ref _isRunning, value);
         }
+
         public bool IsRefreshing
         {
             get => _isRefreshing;
             set => SetProperty(ref _isRefreshing, value);
         }
-
 
         private Place _currentPlace;
 

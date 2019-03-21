@@ -3,5 +3,6 @@
   <PropertyGroup>
     <SelectedDevice>WIKO PULP 4G</SelectedDevice>
     <DefaultDevice>try</DefaultDevice>
+    <AndroidDesignerPreferredTheme>Theme.DeviceDefault.NoActionBar.Fullscreen</AndroidDesignerPreferredTheme>
   </PropertyGroup>
 </Project>

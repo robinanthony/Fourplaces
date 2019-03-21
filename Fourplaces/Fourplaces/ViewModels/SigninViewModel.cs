@@ -1,4 +1,6 @@
-﻿using Storm.Mvvm;
+﻿using Fourplaces.Models;
+using Storm.Mvvm;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -12,8 +14,8 @@ namespace Fourplaces.ViewModels
         private string _email;
         private string _password;
         private string _passwordTwo;
-        private string _prenom;
-        private string _nom;
+        private string _firstName;
+        private string _lastName;
 
         public SigninViewModel()
         {
@@ -23,20 +25,52 @@ namespace Fourplaces.ViewModels
 
         private void SigninClicked(object _)
         {
-            // TODO -> Vérifier que les champs sont remplis et faire l'inscription !
             Signin();
         }
 
         private async void Signin()
         {
-            if (!string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(PasswordTwo) && !string.IsNullOrWhiteSpace(Prenom) && !string.IsNullOrWhiteSpace(Nom) && (Password == PasswordTwo))
+            if (!string.IsNullOrWhiteSpace(Email))
             {
-                await Application.Current.MainPage.DisplayAlert("Test d'inscription", "Vos identifiants sont valides.", "OK");
+                if (!string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
+                {
+                    if (!string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(PasswordTwo))
+                    {
+                        if((Password == PasswordTwo))
+                        {
+                            if (await RestService.Rest.SignIn(Email, Password, FirstName, LastName))
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Inscription", "Votre compte a été crée. Bienvenue sur l'application Fourplaces !", "OK");
+
+                                await NavigationService.PopAsync();
+                                await NavigationService.PushAsync<AllPlace>(new Dictionary<string, object>());
+                            }
+                            else
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Inscription", "Erreur lors de la tentative de création du compte. Veuillez réessayer.", "OK");
+                            }
+                        }
+                        else
+                        { // Password != PasswordTwo
+                            await Application.Current.MainPage.DisplayAlert("Inscription", "La vérification du mot de passe à échouée.", "OK");
+                        }
+                    }
+                    else
+                    { // Problème password or passwordTwo
+                        await Application.Current.MainPage.DisplayAlert("Inscription", "Votre mot de passe ...", "OK"); // TODO
+                    }
+                }
+                else
+                { // Problème firstName ou lastName
+                    await Application.Current.MainPage.DisplayAlert("Inscription", "Votre nom et prénom ...", "OK"); // TODO
+                }
             }
             else
-            {
-                await Application.Current.MainPage.DisplayAlert("Test d'inscription", "Vos identifiants sont invalides.", "OK");
+            { // Problème email
+                await Application.Current.MainPage.DisplayAlert("Inscription", "Votre adresse email ...", "OK"); // TODO
             }
+            Password = "";
+            PasswordTwo = "";
         }
 
         public string Email
@@ -57,16 +91,16 @@ namespace Fourplaces.ViewModels
             set => SetProperty(ref this._passwordTwo, value);
         }
 
-        public string Prenom
+        public string FirstName
         {
-            get => this._prenom;
-            set => SetProperty(ref this._prenom, value);
+            get => this._firstName;
+            set => SetProperty(ref this._firstName, value);
         }
 
-        public string Nom
+        public string LastName
         {
-            get => this._nom;
-            set => SetProperty(ref this._nom, value);
+            get => this._lastName;
+            set => SetProperty(ref this._lastName, value);
         }
     }
 }

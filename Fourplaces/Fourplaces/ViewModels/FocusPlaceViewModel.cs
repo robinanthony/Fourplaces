@@ -21,9 +21,32 @@ namespace Fourplaces.ViewModels
 
         public ICommand AddCommentaireCommand { get; set; }
 
+        public ICommand RefreshCommand { get; set; }
+        private bool _isRefreshing = false;
+
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+        
         public FocusPlaceViewModel()
         {
             this.AddCommentaireCommand = new Command(AddCommentaireClicked);
+            this.RefreshCommand = new Command(RefreshClicked);
+        }
+
+        private void RefreshClicked()
+        {
+            RefreshPlace();
+            IsRefreshing = false;
+        }
+
+        private async void RefreshPlace()
+        {
+            //await GetLocation();
+            //Places = await RestService.Rest.LoadPlaces(MaLocation);
+            MaPlace = await RestService.Rest.LoadPlace(PlaceId);
         }
 
         private void AddCommentaireClicked()
@@ -52,12 +75,13 @@ namespace Fourplaces.ViewModels
             set
             {
                 SetProperty(ref _maPlace, value);
-                Pins = new ObservableCollection<Pin>();
-                Pins.Add(new Pin()
-                {
-                    Position = MaPlace.Position,
-                    Label = MaPlace.Title
-                });
+                Pins = new ObservableCollection<Pin>() {
+                    new Pin()
+                        {
+                            Position = MaPlace.Position,
+                            Label = MaPlace.Title
+                        }
+                };
             }
         }
 

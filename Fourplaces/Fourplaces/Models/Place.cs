@@ -45,7 +45,7 @@ namespace Fourplaces.Models
             }
             else
             {
-                byte[] stream = await RestService.Rest.loadPicture(IdPicture);
+                byte[] stream = await RestService.Rest.LoadPicture(IdPicture);
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
             }
         }

@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Storm.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Text;
 using Xamarin.Forms;
 
 namespace Fourplaces.Models
@@ -13,6 +9,9 @@ namespace Fourplaces.Models
     {
         private int? _idPicture;
         private ImageSource _imageSource;
+
+        [JsonProperty(PropertyName = "id")]
+        public int Id { get; set; }
 
         [JsonProperty(PropertyName = "email")]
         public string Email { get; set; }
@@ -36,11 +35,11 @@ namespace Fourplaces.Models
             set
             {
                 _idPicture = value;
-                updatePicture();
+                UpdatePicture();
             }
         }
 
-        public async void updatePicture()
+        private async void UpdatePicture()
         {
             if (_idPicture == null)
             {
@@ -48,7 +47,7 @@ namespace Fourplaces.Models
             }
             else
             {
-                byte[] stream = await RestService.Rest.loadPicture(IdPicture);
+                byte[] stream = await RestService.Rest.LoadPicture(IdPicture);
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
             }
         }
@@ -59,20 +58,28 @@ namespace Fourplaces.Models
             set => SetProperty(ref _imageSource, value);
         }
 
-        public bool Equals (string email, string password)
-        {
-            return (email == Email && password == Password);
-        }
-
-        public string ToJson()
-        {
-            return "{\"email\": \""+Email+"\", \"password\":\""+Password+"\"}";
-        }
-
         public User(string email, string password)
         {
             Email = email;
             Password = password;
+        }
+
+        public User(string email, string password, string firstName, string lastName)
+        {
+            Email = email;
+            Password = password;
+            FirstName = firstName;
+            LastName = lastName;
+        }
+
+        [JsonConstructor]
+        public User(int id, string first_name, string last_name, string email, int? image_id)
+        {
+            Id = id;
+            FirstName = first_name;
+            LastName = last_name;
+            Email = email;
+            IdPicture = image_id;
         }
     }
 }

@@ -16,38 +16,42 @@
     </NavigationPage.TitleView>
 
     <mvvm:BaseContentPage Icon="Info_icon.png">
-        <StackLayout Orientation="Vertical"  Margin="20,15,20,20">
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
-                <Label Text="Image" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <Image HorizontalOptions="Start"
+        <ScrollView>
+            <StackLayout Orientation="Vertical"  Margin="20,15,20,20">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Image" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Image HorizontalOptions="Start"
                     VerticalOptions="Center"
                     HeightRequest="200"
                     WidthRequest="320"
                     Source="{Binding MaPlace.ImageSource}"
                 />
+                </StackLayout>
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Description" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Label Text="{Binding MaPlace.Description}"/>
+                </StackLayout>
             </StackLayout>
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
-                <Label Text="Description" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <Label Text="{Binding MaPlace.Description}"/>
-            </StackLayout>
-        </StackLayout>
+        </ScrollView>
     </mvvm:BaseContentPage>
 
     <mvvm:BaseContentPage Icon="Maps_icon.png">
-        <StackLayout Orientation="Vertical"  Margin="20,15,20,20">
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
-                <Label Text="Carte" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <myUI:BindableMap WidthRequest="320" HeightRequest="320"
+        <ScrollView>
+            <StackLayout Orientation="Vertical"  Margin="20,15,20,20">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Carte" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <myUI:BindableMap WidthRequest="320" HeightRequest="320"
                         x:Name="MyMap"
                         IsShowingUser="true"
-                        MapType="Hybrid"
+                        MapType="Street"
                         MapPosition="{Binding MaPlace.Position}"
                         MapPins="{Binding Pins}"
                         HorizontalOptions="Start"
                         VerticalOptions="Center"
                      />
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
+        </ScrollView>
     </mvvm:BaseContentPage>
 
     <mvvm:BaseContentPage Icon="Comm_icon.png">
@@ -57,7 +61,7 @@
             </StackLayout>
 
             <StackLayout>
-                <ListView x:Name="CommentaireList" HasUnevenRows="True" ItemsSource="{Binding MaPlace.Commentaires}" SelectionMode="None">
+                <ListView x:Name="CommentaireList" HasUnevenRows="True" ItemsSource="{Binding MaPlace.Commentaires}" SelectionMode="None" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:Commentaire">
                             <ViewCell>
@@ -79,7 +83,7 @@
                                            WidthRequest="48"
                                            Source="{Binding Auteur.ImageSource}"
                                            />
-                                    
+
                                         <StackLayout Orientation="Vertical"
                                         Grid.Column="1"
                                         HorizontalOptions="FillAndExpand"
