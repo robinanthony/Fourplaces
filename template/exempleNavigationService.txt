@@ -1,0 +1,70 @@
+Fichier : App.xaml.cs
+
+	public partial class App : MvvmApplication
+		{
+			public App() : base(() => new PageUne())
+			{
+				InitializeComponent();
+			}
+		}
+
+Fichier : PageUne.xaml.cs
+
+	public partial class PageUne : BaseContentPage
+	{
+		public PageUne ()
+		{
+			InitializeComponent();
+			BindingContext = new PageUneViewModel();
+		}
+	}
+
+Fichier : PageUne.xaml
+
+	<?xml version="1.0" encoding="UTF-8"?>
+	<mvvm:BaseContentPage xmlns=...>
+		</StackLayout>
+			<Button Text="Se connecter" Command="{Binding PageDeuxCommand}"></Button>
+		</StackLayout>
+	</mvvm:BaseContentPage>
+
+Fichier : PageUneViewModel.cs
+
+	class PageUneViewModel : ViewModelBase
+    {
+        public ICommand PageDeuxCommand{ get; set; }
+
+		public PageUneViewModel()
+        {
+            PageDeuxCommand = new Command(PageDeuxClicked);
+        }
+
+        private void PageDeuxClicked(object _)
+        {
+            OpenPageDeux();
+        }
+
+        private async void OpenPageDeux()
+        {
+            await NavigationService.PushAsync<PageDeux>(new Dictionary<string, object>());
+        }
+	}
+
+Fichier : PageDeux.xaml.cs
+	public partial class PageDeux : BaseContentPage
+		{
+			public PageDeux()
+			{
+				InitializeComponent();
+				BindingContext = new PageDeuxViewModel();
+			}
+		}
+
+Fichier : PageDeux.xaml
+
+	<?xml version="1.0" encoding="UTF-8"?>
+		<mvvm:BaseContentPage xmlns=...>
+			</StackLayout>
+				<Label Text="Page 2"/>
+			</StackLayout>
+		</mvvm:BaseContentPage>

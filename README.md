@@ -8,6 +8,7 @@ A student's project with Xamarin technology.
     - Mettre à jour l'ecran d'ajout d'une nouvelle place avec toutes les infos liées
 
     - Finir de faire l'affichage des messages d'erreurs lors de l'inscription
+    - Après reception d'une réponse des profs, voir pour corriger le cas où l'email existe déjà
 
     - Ajouter un ecran pour voir son profil
     - Ajouter un ecran permettant de modifier son profil

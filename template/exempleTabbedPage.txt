@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TabbedPage
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:mvvm="clr-namespace:Storm.Mvvm.Forms;assembly=Storm.Mvvm.Forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             >
+
+    <mvvm:BaseContentPage Icon="Info_icon.png">
+        <StackLayout Orientation="Vertical">
+		<!-- PREMIER ONGLET -->
+        </StackLayout>
+    </mvvm:BaseContentPage>
+
+    <mvvm:BaseContentPage Icon="Maps_icon.png">
+        <StackLayout Orientation="Vertical" >
+		<!-- SECOND ONGLET -->
+        </StackLayout>
+    </mvvm:BaseContentPage>
+
+    <mvvm:BaseContentPage Icon="Comm_icon.png">
+        <StackLayout Orientation="Vertical">
+		<!-- TROISIEME ONGLET -->
+        </StackLayout>
+    </mvvm:BaseContentPage>
+</TabbedPage>
