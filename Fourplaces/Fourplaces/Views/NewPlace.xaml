@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
+
 <mvvm:BaseContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:mvvm="clr-namespace:Storm.Mvvm.Forms;assembly=Storm.Mvvm.Forms"
@@ -9,9 +10,30 @@
     xmlns:myUI="clr-namespace:Fourplaces.MyUI"
     x:Class="Fourplaces.NewPlace"
     x:DataType="vm:NewPlaceViewModel">
-
+    
+    <NavigationPage.TitleView>
+        <Label Text="{Binding TitleLabel}"></Label>
+    </NavigationPage.TitleView>
+    
     <StackLayout>
-        <Label Text="Hello Xamarin.Forms!"/>
-        <Label Text="Vous etes sur la page d'ajout de place ! Travail en cours !"/>
+
+        <Button Text="Prendre une photo" Command="{Binding TakeAPhoto}"/>
+        <Button Text="Choisir une image existante" Command="{Binding TakeAnImage}"/>
+
+        <Label Text="Nom"/>
+        <Entry Text="{Binding Nom, Mode=TwoWay}"/>
+
+        <Label Text="Description"/>
+        <Entry Text="{Binding Description, Mode=TwoWay}"/>
+
+        <Label Text="Latitude"/>
+        <Entry Text="{Binding Latitude, Mode=TwoWay}"/>
+
+        <Label Text="Longitude"/>
+        <Entry Text="{Binding Longitude, Mode=TwoWay}"/>
+
+        <Button Text="Prendre ma position" Command="{Binding GetPosition}"/>
+
+        <Button Text="Valider" Command="{Binding AddPlace}"/>
     </StackLayout>
 </mvvm:BaseContentPage>
