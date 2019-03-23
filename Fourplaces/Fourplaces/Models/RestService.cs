@@ -68,13 +68,20 @@ namespace Fourplaces.Models
 
                     List<Place> needOrder = new List<Place>();
 
-                    foreach (Place p in restResponse.Data)
+                    if ("true".Equals(restResponse.IsSuccess))
                     {
-                        p.Distance = GetDistanceBetweenPositions(p.Position, MaLocation);
-                        needOrder.Add(p);
+                        foreach (Place p in restResponse.Data)
+                        {
+                            p.Distance = GetDistanceBetweenPositions(p.Position, MaLocation);
+                            needOrder.Add(p);
+                        }
+                        needOrder.Sort(Place.Comparaison);
+                        _places = new ObservableCollection<Place>(needOrder);
                     }
-                    needOrder.Sort(Place.Comparaison);
-                    _places = new ObservableCollection<Place>(needOrder);
+                    else
+                    { // TODO Qu'est-ce que je fais ici?
+
+                    }
                 }
             }
             catch (Exception e)
@@ -128,7 +135,16 @@ namespace Fourplaces.Models
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<Token> restResponse = JsonConvert.DeserializeObject<RestResponse<Token>>(json);
-                    Token.Ticket = restResponse.Data;
+
+                    if ("true".Equals(restResponse.IsSuccess))
+                    {
+                        Token.Ticket = restResponse.Data;
+                    }
+                    else
+                    {
+                        // Qu'est-ce que je fais ici?
+                        Token.Destroy();
+                    }
                 }
                 else
                 {
@@ -155,7 +171,16 @@ namespace Fourplaces.Models
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<Place> restResponse = JsonConvert.DeserializeObject<RestResponse<Place>>(json);
-                    maPlace = restResponse.Data;
+
+                    if ("true".Equals(restResponse.IsSuccess))
+                    {
+                        maPlace = restResponse.Data;
+                    }
+                    else
+                    {
+                        // TODO Qu'est-ce que je fais ici?
+
+                    }
                 }
             }
             catch (Exception e)
@@ -182,8 +207,17 @@ namespace Fourplaces.Models
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<Token> restResponse = JsonConvert.DeserializeObject<RestResponse<Token>>(json);
-                    Token.Ticket = restResponse.Data;
-                    return true;
+
+                    if ("true".Equals(restResponse.IsSuccess))
+                    {
+                        Token.Ticket = restResponse.Data;
+                        return true;
+                    }
+                    else
+                    {
+                        // TODO : Qu'est-ce que je fais ici?
+                        return false;
+                    }
                 }
                 else
                 {

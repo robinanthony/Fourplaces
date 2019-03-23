@@ -39,7 +39,8 @@ namespace Fourplaces.ViewModels
                         if((Password == PasswordTwo))
                         {
                             if (await RestService.Rest.SignIn(Email, Password, FirstName, LastName))
-                            {
+                            { // TODO : modifier le if de telle sorte à gerer trois situation : 
+                                // 0, 1 ou 2 selon si l'inscription est OK, email deja utilisé ou si une erreur inopinée est apparu
                                 await Application.Current.MainPage.DisplayAlert("Inscription", "Votre compte a été crée. Bienvenue sur l'application Fourplaces !", "OK");
 
                                 await NavigationService.PopAsync();
