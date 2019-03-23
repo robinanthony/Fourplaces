@@ -9,9 +9,14 @@
     xmlns:myUI="clr-namespace:Fourplaces.MyUI"
     x:Class="Fourplaces.NewCommentaire"
     x:DataType="vm:NewCommentaireViewModel">
+    <NavigationPage.TitleView>
+        <Label Text="{Binding TitleLabel}"/>
+    </NavigationPage.TitleView>
 
     <StackLayout>
-        <Label Text="Hello Xamarin.Forms!"/>
-        <Label Text="Vous etes sur la page d'ajout de commentaire ! Travail en cours !"/>
+        <Label Text="Commentaire" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+        <Entry x:Name="commentaireEntry" Placeholder="commentaire" Margin="0,0,0,5" Text="{Binding MonCommentaire, Mode=TwoWay}"/>
+
+        <Button Text="Ajouter mon commentaire" Command="{Binding AddCommand}"></Button>
     </StackLayout>
 </mvvm:BaseContentPage>

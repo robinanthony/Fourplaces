@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms.Maps;
 
 namespace Fourplaces.Models
 {
-    class RestService
+    public class RestService
     {
         private HttpClient client;
 
@@ -53,6 +54,8 @@ namespace Fourplaces.Models
 
         public async Task<ObservableCollection<Place>> LoadPlaces(Position MaLocation)
         {
+            Token.RefreshIfNecessary();
+
             ObservableCollection<Place> _places = new ObservableCollection<Place>();
 
             string RestUrl = "https://td-api.julienmialon.com/places";
@@ -161,6 +164,8 @@ namespace Fourplaces.Models
 
         public async Task<Place> LoadPlace(long idPlace)
         {
+            Token.RefreshIfNecessary();
+
             string RestUrl = "https://td-api.julienmialon.com/places/"+ idPlace;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
@@ -227,6 +232,79 @@ namespace Fourplaces.Models
                 Debug.WriteLine(e.Message);
             }
             return (false, "Erreur lors de la tentative de création du compte. Veuillez réessayer.");
+        }
+
+        public async Task<(Boolean, string)> AddCommentaire(long idPlace, string texte)
+        {
+            Token.RefreshIfNecessary();
+
+            string RestUrl = "https://td-api.julienmialon.com/places/" + idPlace + "/comments";
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, RestUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue(Token.Ticket.TokenType, Token.Ticket.AccessToken);
+            request.Content = new StringContent("{ \"text\": \"" + texte + "\"}", Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    RestResponse restResponse = JsonConvert.DeserializeObject<RestResponse>(json);
+
+                    if ("true".Equals(restResponse.IsSuccess))
+                    {
+                        return (true, "Ajout du commentaire effectué.");
+                    }
+                    else
+                    {
+                        return (false, "Votre commentaire n'a pû être ajouté.");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return (false, "Erreur lors de la tentative d'ajout du commentaire. Veuillez réessayer.");
+        }
+
+        public async Task RefreshToken()
+        {
+            string RestUrl = "https://td-api.julienmialon.com/auth/refresh";
+            var uri = new Uri(string.Format(RestUrl, string.Empty));
+
+            var stringContent = new StringContent("{ \"refresh_token\": \"" + Token.Ticket.RefreshToken + "\"}", Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync(uri, stringContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    RestResponse<Token> restResponse = JsonConvert.DeserializeObject<RestResponse<Token>>(json);
+
+                    if ("true".Equals(restResponse.IsSuccess))
+                    {
+                        Token.Ticket = restResponse.Data;
+                    }
+                    else
+                    {
+                        // Qu'est-ce que je fais ici?
+                        Token.Destroy();
+                    }
+                }
+                else
+                {
+                    Token.Destroy();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
     }
 }

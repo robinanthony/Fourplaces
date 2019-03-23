@@ -7,13 +7,8 @@ using System.Text;
 
 namespace Fourplaces.Models
 {
-    class RestResponse<T>
+    public class RestResponse
     {
-
-        [JsonProperty(PropertyName = "data", DefaultValueHandling = DefaultValueHandling.Populate)]
-        [DefaultValue(null)]
-        public T Data { get; set; }
-
         [JsonProperty(PropertyName = "is_success")]
         public string IsSuccess { get; set; }
 
@@ -22,5 +17,12 @@ namespace Fourplaces.Models
 
         [JsonProperty(PropertyName = "error_message")]
         public string ErrorMessage { get; set; }
+    }
+
+    public class RestResponse<T> : RestResponse
+    {
+        [JsonProperty(PropertyName = "data", DefaultValueHandling = DefaultValueHandling.Populate)]
+        [DefaultValue(null)]
+        public T Data { get; set; }
     }
 }

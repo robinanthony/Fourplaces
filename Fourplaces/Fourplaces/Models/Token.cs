@@ -5,16 +5,30 @@ using System.Text;
 
 namespace Fourplaces.Models
 {
-    class Token
+    public class Token
     {
+
         [JsonProperty(PropertyName = "access_token")]
         public string AccessToken { get; set; }
 
         [JsonProperty(PropertyName = "refresh_token")]
         public string RefreshToken { get; set; }
 
+        private DateTime _expiresIn;
+
         [JsonProperty(PropertyName = "expires_in")]
-        public string ExpiresIn { get; set; }
+        public string ExpiresIn {
+            get
+            {
+                return _expiresIn.ToString();
+            }
+            set
+            {
+                double add = Convert.ToDouble(value);
+                DateTime day = DateTime.Today.AddSeconds(add);
+                _expiresIn = new DateTime(day.Year, day.Month, day.Day, day.Hour, day.Minute, day.Second);
+            }
+        }
 
         [JsonProperty(PropertyName = "token_type")]
         public string TokenType { get; set; }
@@ -52,6 +66,20 @@ namespace Fourplaces.Models
                 return false;
             }
             return true;
+        }
+
+        public static void RefreshIfNecessary()
+        {
+            if (DateTime.Today.AddMinutes(10) >= Ticket._expiresIn)
+            {
+                Refresh();
+                // TODO : Si jamais Refresh fail et que le token n'existe plus (_token == null), il faudrait déconnecter l'utilisateur ...
+            }
+        }
+
+        public static async void Refresh()
+        {
+            await RestService.Rest.RefreshToken();
         }
     }
 }

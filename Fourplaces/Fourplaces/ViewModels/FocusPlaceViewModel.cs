@@ -13,7 +13,7 @@ using Xamarin.Forms.Maps;
 
 namespace Fourplaces.ViewModels
 {
-    class FocusPlaceViewModel : ViewModelBase
+    public class FocusPlaceViewModel : ViewModelBase
     {
         private long _placeId;
         private Place _maPlace;
@@ -44,8 +44,6 @@ namespace Fourplaces.ViewModels
 
         private async void RefreshPlace()
         {
-            //await GetLocation();
-            //Places = await RestService.Rest.LoadPlaces(MaLocation);
             MaPlace = await RestService.Rest.LoadPlace(PlaceId);
         }
 
@@ -56,7 +54,7 @@ namespace Fourplaces.ViewModels
 
         private async void OpenAddCommentaire()
         {
-            await NavigationService.PushAsync<NewCommentaire>(new Dictionary<string, object>());
+            await NavigationService.PushAsync<NewCommentaire>(new Dictionary<string, object>() { { "PlaceId", MaPlace.Id } });
         }
 
         [NavigationParameter]
