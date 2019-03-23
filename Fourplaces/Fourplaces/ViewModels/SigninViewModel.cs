@@ -1,5 +1,6 @@
 ﻿using Fourplaces.Models;
 using Storm.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -38,17 +39,17 @@ namespace Fourplaces.ViewModels
                     {
                         if((Password == PasswordTwo))
                         {
-                            if (await RestService.Rest.SignIn(Email, Password, FirstName, LastName))
-                            { // TODO : modifier le if de telle sorte à gerer trois situation : 
-                                // 0, 1 ou 2 selon si l'inscription est OK, email deja utilisé ou si une erreur inopinée est apparu
-                                await Application.Current.MainPage.DisplayAlert("Inscription", "Votre compte a été crée. Bienvenue sur l'application Fourplaces !", "OK");
+                            (Boolean test, string message) = await RestService.Rest.SignIn(Email, Password, FirstName, LastName);
+                            if (test)
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Inscription", message, "OK");
 
                                 await NavigationService.PopAsync();
                                 await NavigationService.PushAsync<AllPlace>(new Dictionary<string, object>());
                             }
                             else
                             {
-                                await Application.Current.MainPage.DisplayAlert("Inscription", "Erreur lors de la tentative de création du compte. Veuillez réessayer.", "OK");
+                                await Application.Current.MainPage.DisplayAlert("Inscription", message, "OK");
                             }
                         }
                         else
@@ -58,17 +59,17 @@ namespace Fourplaces.ViewModels
                     }
                     else
                     { // Problème password or passwordTwo
-                        await Application.Current.MainPage.DisplayAlert("Inscription", "Votre mot de passe ...", "OK"); // TODO
+                        await Application.Current.MainPage.DisplayAlert("Inscription", "Votre mot de passe ne peut être vide.", "OK");
                     }
                 }
                 else
                 { // Problème firstName ou lastName
-                    await Application.Current.MainPage.DisplayAlert("Inscription", "Votre nom et prénom ...", "OK"); // TODO
+                    await Application.Current.MainPage.DisplayAlert("Inscription", "Votre nom et prénom ne peuvent être vide.", "OK");
                 }
             }
             else
             { // Problème email
-                await Application.Current.MainPage.DisplayAlert("Inscription", "Votre adresse email ...", "OK"); // TODO
+                await Application.Current.MainPage.DisplayAlert("Inscription", "Votre adresse email ne peut être vide.", "OK");
             }
             Password = "";
             PasswordTwo = "";

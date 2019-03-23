@@ -79,8 +79,8 @@ namespace Fourplaces.Models
                         _places = new ObservableCollection<Place>(needOrder);
                     }
                     else
-                    { // TODO Qu'est-ce que je fais ici?
-
+                    { 
+                        // TODO Qu'est-ce que je fais ici?
                     }
                 }
             }
@@ -179,7 +179,6 @@ namespace Fourplaces.Models
                     else
                     {
                         // TODO Qu'est-ce que je fais ici?
-
                     }
                 }
             }
@@ -190,7 +189,7 @@ namespace Fourplaces.Models
             return maPlace;
         }
 
-        public async Task<Boolean> SignIn(string email, string password, string firstName, string lastName)
+        public async Task<(Boolean, string)> SignIn(string email, string password, string firstName, string lastName)
         {
             User utilisateur = new User(email, password, firstName, lastName);
 
@@ -211,12 +210,11 @@ namespace Fourplaces.Models
                     if ("true".Equals(restResponse.IsSuccess))
                     {
                         Token.Ticket = restResponse.Data;
-                        return true;
+                        return (true, "Votre compte a été crée. Bienvenue sur l'application Fourplaces !");
                     }
                     else
                     {
-                        // TODO : Qu'est-ce que je fais ici?
-                        return false;
+                        return (false, "L'adresse email demandée est déjà utilisée. Veuillez en utiliser une autre ou vous connecter.");
                     }
                 }
                 else
@@ -228,7 +226,7 @@ namespace Fourplaces.Models
             {
                 Debug.WriteLine(e.Message);
             }
-            return false;
+            return (false, "Erreur lors de la tentative de création du compte. Veuillez réessayer.");
         }
     }
 }

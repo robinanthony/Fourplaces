@@ -19,17 +19,17 @@
             <Label Text="Email" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             <Entry x:Name="usernameEntry" Placeholder="email" Margin="0,0,0,5" Text="{Binding Email, Mode=TwoWay}"/>
 
-            <Label Text="Mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-            <Entry x:Name="passwordEntry" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding Password, Mode=TwoWay}"/>
-
-            <Label Text="Repeter votre mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-            <Entry x:Name="passwordEntryTwo" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding PasswordTwo, Mode=TwoWay}"/>
-
             <Label Text="Prenom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             <Entry x:Name="prenomEntry" Placeholder="prenom" Margin="0,0,0,5" Text="{Binding FirstName, Mode=TwoWay}"/>
 
             <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             <Entry x:Name="nomEntry" Placeholder="nom" Margin="0,0,0,5" Text="{Binding LastName, Mode=TwoWay}"/>
+
+            <Label Text="Mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+            <Entry x:Name="passwordEntry" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding Password, Mode=TwoWay}"/>
+
+            <Label Text="Repeter votre mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+            <Entry x:Name="passwordEntryTwo" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding PasswordTwo, Mode=TwoWay}"/>
 
             <Button Text="S'inscrire" Command="{Binding SigninCommand}"></Button>
         </StackLayout>
