@@ -3,6 +3,8 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Storm.Mvvm;
 using System;
+using System.Globalization;
+using System.IO;
 using Xamarin.Forms;
 
 namespace Fourplaces.ViewModels
@@ -66,7 +68,7 @@ namespace Fourplaces.ViewModels
                 ImageSource = ImageSource.FromStream(() =>
                 {
                     var stream = _image.GetStream();
-                    _image.Dispose();
+                    //_image.Dispose();
                     return stream;
                 });
             }
@@ -132,18 +134,50 @@ namespace Fourplaces.ViewModels
 
         private async void PositionCommand()
         {
-            // TODO
-            //await App.Current.MainPage.DisplayAlert("position command", "clicked !", "Ok");
             var res = await MyGeolocator.GetLocation();
-            Latitude = res.Latitude.ToString();
-            Longitude = res.Longitude.ToString();
+            Latitude = res.Latitude.ToString("G", CultureInfo.InvariantCulture);
+            Longitude = res.Longitude.ToString("G", CultureInfo.InvariantCulture);
         }
 
         private async void AddCommand()
         {
-            // TODO 
-            await App.Current.MainPage.DisplayAlert("add command", "clicked !", "ok");
+            if (_image != null)
+            {
+                if (!string.IsNullOrWhiteSpace(Nom) && !string.IsNullOrWhiteSpace(Description))
+                {
+                    if (!string.IsNullOrWhiteSpace(Latitude) && !string.IsNullOrWhiteSpace(Longitude))
+                    { // TODO : Une vérification sur est-ce que latitude et longitude sont bien des double serait cool ...
 
+                        MemoryStream memoryStream = new MemoryStream();
+                        _image.GetStream().CopyTo(memoryStream);
+                        byte[] pictureArray = memoryStream.ToArray();
+
+                        (Boolean test, string infos) = await RestService.Rest.AddPlace(Nom, Description, pictureArray, Latitude, Longitude);
+                        
+                        if (test)
+                        {
+                            await App.Current.MainPage.DisplayAlert("True", infos, "ok");
+                            await NavigationService.PopAsync();
+                        }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("False", infos, "ok");
+                        }
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Ajout d'une place", "Vous devez préciser une position pour votre lieu.", "ok");
+                    }
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Ajout d'une place", "Vous devez préciser un nom et une description.", "ok");
+                }
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Ajout d'une place", "Vous devez selectionner une image.", "ok");
+            }
         }
 
         public NewPlaceViewModel()

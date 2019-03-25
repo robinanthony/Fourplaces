@@ -18,3 +18,5 @@ A student's project with Xamarin technology.
     - Commenter les fonctions si necessaire
     - Retirer tous les using inutiles
     - Vérifier que tout le code est uniforme (TOUT le code en anglais !)
+    - Dans le RestService, changer les creations de chaines de caractères pas propres en
+      quelque chose de mieux ... String.Format("The current price is {0} per ounce.", pricePerOunce);

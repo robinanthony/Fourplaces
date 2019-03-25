@@ -21,8 +21,9 @@ namespace Fourplaces.Models
 
     public class RestResponse<T> : RestResponse
     {
-        [JsonProperty(PropertyName = "data", DefaultValueHandling = DefaultValueHandling.Populate)]
-        [DefaultValue(null)]
+        //[JsonProperty(PropertyName = "data", DefaultValueHandling = DefaultValueHandling.Populate)]
+        //[DefaultValue(null)]
+        [JsonProperty(PropertyName = "data")]
         public T Data { get; set; }
     }
 }
