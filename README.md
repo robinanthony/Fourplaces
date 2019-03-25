@@ -17,3 +17,4 @@ A student's project with Xamarin technology.
     - Ordonner proprement les fonctions
     - Commenter les fonctions si necessaire
     - Retirer tous les using inutiles
+    - Vérifier que tout le code est uniforme (TOUT le code en anglais !)

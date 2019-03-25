@@ -1,6 +1,8 @@
 ﻿using Plugin.Media;
+using Plugin.Media.Abstractions;
 using Storm.Mvvm;
 using System;
+using System.IO;
 using Xamarin.Forms;
 
 namespace Fourplaces.ViewModels
@@ -13,7 +15,8 @@ namespace Fourplaces.ViewModels
         private string _latitudeLieu;
         private string _longitudeLieu;
 
-        private Plugin.Media.Abstractions.MediaFile _image;
+        private MediaFile _image;
+        private ImageSource _imageSource;
 
         public Command TakeAPhoto { get; private set; }
         public Command TakeAnImage { get; private set; }
@@ -46,36 +49,79 @@ namespace Fourplaces.ViewModels
             set => SetProperty(ref _longitudeLieu, value);
         }
 
+        public ImageSource ImageSource
+        {
+            get => _imageSource;
+            set => SetProperty(ref _imageSource, value);
+        }
+
+        private void UpdatePicture()
+        {
+            if (_image == null)
+            {
+                ImageSource = ImageSource.FromFile("no_pic.jpg");
+            }
+            else
+            {
+                ImageSource = ImageSource.FromStream(() =>
+                {
+                    var stream = _image.GetStream();
+                    _image.Dispose();
+                    return stream;
+                });
+            }
+        }
+
         private async void PhotoCommand()
         {
             await CrossMedia.Current.Initialize();
 
-            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+            if (CrossMedia.Current.IsCameraAvailable || CrossMedia.Current.IsTakePhotoSupported)
             {
-                await App.Current.MainPage.DisplayAlert("No Camera", ":( No camera available.", "OK");
-                return;
+                // Supply media options for saving our photo after it's taken.
+                var mediaOptions = new StoreCameraMediaOptions
+                {
+                    Directory = "Receipts",
+                    Name = DateTime.Now.ToShortTimeString() + ".jpg",
+                    PhotoSize = PhotoSize.MaxWidthHeight,
+                    MaxWidthHeight = 4096,
+                    CompressionQuality = 75,
+                    AllowCropping = true
+                };
+
+                // Take a photo of the business receipt.
+                var file = await CrossMedia.Current.TakePhotoAsync(mediaOptions);
+
+                if (file != null)
+                {
+                    _image = file;
+                    UpdatePicture();
+                }
             }
-
-            var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+            else
             {
-                Name = DateTime.Now.ToShortTimeString() + ".jpg"
-            });
-
-            if (file != null)
-            {
-                _image = file;
+                await App.Current.MainPage.DisplayAlert("No Camera", " No camera available.", "OK");
             }
         }
 
         private async void ImageCommand()
         {
+            await CrossMedia.Current.Initialize();
+
             if (CrossMedia.Current.IsPickPhotoSupported)
             {
-                var file = await CrossMedia.Current.PickPhotoAsync();
+                var mediaOptions = new PickMediaOptions {
+                    PhotoSize = PhotoSize.MaxWidthHeight,
+                    MaxWidthHeight = 4096,
+                    CompressionQuality = 75
+                };
+
+                var file = await CrossMedia.Current.PickPhotoAsync(mediaOptions);
 
                 if (file != null)
                 {
                     _image = file;
+                    UpdatePicture();
                 }
             }
             else
@@ -86,12 +132,14 @@ namespace Fourplaces.ViewModels
 
         private async void PositionCommand()
         {
+            // TODO
             await App.Current.MainPage.DisplayAlert("position command", "clicked !", "Ok");
 
         }
 
         private async void AddCommand()
         {
+            // TODO 
             await App.Current.MainPage.DisplayAlert("add command", "clicked !", "ok");
 
         }
@@ -103,6 +151,8 @@ namespace Fourplaces.ViewModels
             this.TakeAPhoto = new Command(PhotoCommand);
             this.GetPosition = new Command(PositionCommand);
             this.AddPlace = new Command(AddCommand);
+
+            UpdatePicture();
         }
     }
 }

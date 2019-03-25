@@ -14,26 +14,32 @@
     <NavigationPage.TitleView>
         <Label Text="{Binding TitleLabel}"></Label>
     </NavigationPage.TitleView>
-    
-    <StackLayout>
 
-        <Button Text="Prendre une photo" Command="{Binding TakeAPhoto}"/>
-        <Button Text="Choisir une image existante" Command="{Binding TakeAnImage}"/>
+    <ScrollView>
+        <StackLayout>
 
-        <Label Text="Nom"/>
-        <Entry Text="{Binding Nom, Mode=TwoWay}"/>
+            <Image Source="{Binding ImageSource}"
+               WidthRequest="150"
+               HeightRequest="150"/>
 
-        <Label Text="Description"/>
-        <Entry Text="{Binding Description, Mode=TwoWay}"/>
+            <Button Text="Prendre une photo" Command="{Binding TakeAPhoto}"/>
+            <Button Text="Choisir une image existante" Command="{Binding TakeAnImage}"/>
 
-        <Label Text="Latitude"/>
-        <Entry Text="{Binding Latitude, Mode=TwoWay}"/>
+            <Label Text="Nom"/>
+            <Entry Text="{Binding Nom, Mode=TwoWay}"/>
 
-        <Label Text="Longitude"/>
-        <Entry Text="{Binding Longitude, Mode=TwoWay}"/>
+            <Label Text="Description"/>
+            <Entry Text="{Binding Description, Mode=TwoWay}"/>
 
-        <Button Text="Prendre ma position" Command="{Binding GetPosition}"/>
+            <Label Text="Latitude"/>
+            <Entry Text="{Binding Latitude, Mode=TwoWay}"/>
 
-        <Button Text="Valider" Command="{Binding AddPlace}"/>
-    </StackLayout>
+            <Label Text="Longitude"/>
+            <Entry Text="{Binding Longitude, Mode=TwoWay}"/>
+
+            <Button Text="Prendre ma position" Command="{Binding GetPosition}"/>
+
+            <Button Text="Valider" Command="{Binding AddPlace}"/>
+        </StackLayout>
+    </ScrollView>
 </mvvm:BaseContentPage>
