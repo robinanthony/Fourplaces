@@ -4,10 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Xamarin.Forms;
-using Plugin.Geolocator;
-using System;
 using Xamarin.Forms.Maps;
-using Plugin.Permissions;
 using System.Windows.Input;
 
 namespace Fourplaces.ViewModels
@@ -57,7 +54,7 @@ namespace Fourplaces.ViewModels
 
         private async void RefreshPlaces()
         {
-            await GetLocation();
+            MaLocation = await MyGeolocator.GetLocation();
             Places = await RestService.Rest.LoadPlaces(MaLocation);
         }
 
@@ -71,82 +68,11 @@ namespace Fourplaces.ViewModels
             await NavigationService.PushAsync<NewPlace>(new Dictionary<string, object>());
         }
 
-        private async Task<Plugin.Geolocator.Abstractions.Position> GetCurrentLocation()
-        {
-            Plugin.Geolocator.Abstractions.Position myPos = null;
-            try
-            {
-                var locator = CrossGeolocator.Current;
-                locator.DesiredAccuracy = 100;
-                myPos = await locator.GetLastKnownLocationAsync();
-
-                if (myPos != null)
-                {
-                    return myPos;
-                }
-                else
-                {
-                    Console.WriteLine("Erreur, la dernière position connue est nulle ! ");
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Unable to get location : " + e.Message);
-                return null;
-            }
-        }
-
-        public async Task GetLocation()
-        {
-            Plugin.Geolocator.Abstractions.Position myPos = null;
-            try
-            {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Location);
-
-                if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
-                {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Plugin.Permissions.Abstractions.Permission.Location))
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Géolocalisation demandée", "L'application à besoin de votre permission pour vous géolocaliser", "OK");
-                    }
-
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.Location);
-                    if (results.ContainsKey(Plugin.Permissions.Abstractions.Permission.Location))
-                    {
-                        status = results[Plugin.Permissions.Abstractions.Permission.Location];
-                    }
-                }
-
-                if (status == Plugin.Permissions.Abstractions.PermissionStatus.Granted)
-                {
-                    myPos = await GetCurrentLocation();
-                    if (myPos != null)
-                    {
-                        MaLocation = new Position((float)myPos.Latitude, (float)myPos.Longitude);
-                    }
-                    else
-                    {
-                        // Pb avec la geolocalisation ...
-                        MaLocation = new Position(0, 0);
-                    }
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert("Permissions non accordée", "L'application ne peut pas vous géolocaliser en raison d'une permission non accordée", "OK");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Erreur : " + e.Message);
-            }
-        }
-
         public override async Task OnResume()
         {
             await base.OnResume();
 
-            await GetLocation();
+            MaLocation = await MyGeolocator.GetLocation();
 
             Places = await RestService.Rest.LoadPlaces(MaLocation);
 

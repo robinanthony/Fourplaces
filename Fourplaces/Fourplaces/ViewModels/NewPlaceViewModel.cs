@@ -1,8 +1,8 @@
-﻿using Plugin.Media;
+﻿using Fourplaces.Models;
+using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Storm.Mvvm;
 using System;
-using System.IO;
 using Xamarin.Forms;
 
 namespace Fourplaces.ViewModels
@@ -133,8 +133,10 @@ namespace Fourplaces.ViewModels
         private async void PositionCommand()
         {
             // TODO
-            await App.Current.MainPage.DisplayAlert("position command", "clicked !", "Ok");
-
+            //await App.Current.MainPage.DisplayAlert("position command", "clicked !", "Ok");
+            var res = await MyGeolocator.GetLocation();
+            Latitude = res.Latitude.ToString();
+            Longitude = res.Longitude.ToString();
         }
 
         private async void AddCommand()
