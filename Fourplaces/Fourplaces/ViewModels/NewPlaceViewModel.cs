@@ -5,6 +5,7 @@ using Storm.Mvvm;
 using System;
 using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using Xamarin.Forms;
 
 namespace Fourplaces.ViewModels
@@ -83,7 +84,7 @@ namespace Fourplaces.ViewModels
                 // Supply media options for saving our photo after it's taken.
                 var mediaOptions = new StoreCameraMediaOptions
                 {
-                    Directory = "Receipts",
+                    //Directory = "Receipts",
                     Name = DateTime.Now.ToShortTimeString() + ".jpg",
                     PhotoSize = PhotoSize.MaxWidthHeight,
                     MaxWidthHeight = 4096,
@@ -146,22 +147,32 @@ namespace Fourplaces.ViewModels
                 if (!string.IsNullOrWhiteSpace(Nom) && !string.IsNullOrWhiteSpace(Description))
                 {
                     if (!string.IsNullOrWhiteSpace(Latitude) && !string.IsNullOrWhiteSpace(Longitude))
-                    { // TODO : Une vérification sur est-ce que latitude et longitude sont bien des double serait cool ...
+                    {
+                        string pattern = @"^[\-]?\d+(\.\d+)*$";
 
-                        MemoryStream memoryStream = new MemoryStream();
-                        _image.GetStream().CopyTo(memoryStream);
-                        byte[] pictureArray = memoryStream.ToArray();
+                        Regex rgx = new Regex(pattern);
 
-                        (Boolean test, string infos) = await RestService.Rest.AddPlace(Nom, Description, pictureArray, Latitude, Longitude);
-                        
-                        if (test)
+                        if (rgx.IsMatch(Latitude) && rgx.IsMatch(Longitude))
                         {
-                            await App.Current.MainPage.DisplayAlert("True", infos, "ok");
-                            await NavigationService.PopAsync();
+                            MemoryStream memoryStream = new MemoryStream();
+                            _image.GetStream().CopyTo(memoryStream);
+                            byte[] pictureArray = memoryStream.ToArray();
+
+                            (Boolean test, string infos) = await RestService.Rest.AddPlace(Nom, Description, pictureArray, Latitude, Longitude);
+
+                            if (test)
+                            {
+                                await App.Current.MainPage.DisplayAlert("Ajout d'une place", infos, "ok");
+                                await NavigationService.PopAsync();
+                            }
+                            else
+                            {
+                                await App.Current.MainPage.DisplayAlert("Ajout d'une place", infos, "ok");
+                            }
                         }
                         else
                         {
-                            await App.Current.MainPage.DisplayAlert("False", infos, "ok");
+                            await App.Current.MainPage.DisplayAlert("Ajout d'une place", "La lattitude et la longitude doivent être de la forme ^[\\-]?\\d+(\\.\\d+)*$ .", "ok");
                         }
                     }
                     else

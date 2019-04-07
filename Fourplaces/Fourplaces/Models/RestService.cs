@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,7 +14,6 @@ namespace Fourplaces.Models
     public class RestService
     {
         private HttpClient client;
-
         private static RestService _rest;
 
         public static RestService Rest
@@ -118,7 +116,6 @@ namespace Fourplaces.Models
             {
                 Debug.WriteLine(e.Message);
             }
-
             return stream;
         }
 
@@ -364,26 +361,30 @@ namespace Fourplaces.Models
                 {
                     var response = await client.SendAsync(request);
 
+                    var json = await response.Content.ReadAsStringAsync();
+                    RestResponse restResponse = JsonConvert.DeserializeObject<RestResponse>(json);
+
+
                     if (response.IsSuccessStatusCode)
                     {
-                        var json = await response.Content.ReadAsStringAsync();
-                        RestResponse restResponse = JsonConvert.DeserializeObject<RestResponse>(json);
-
                         if ("true".Equals(restResponse.IsSuccess))
                         {
                             return (true, "Ajout de la place effectué.");
                         }
                         else
                         {
-                            return (false, "Votre place n'a pû être ajouté.");
+                            return (false, "Votre place n'a pû être ajouté. "+restResponse.ErrorMessage);
                         }
+                    }
+                    else
+                    {
+                        return (false, "Erreur lors de la tentative d'ajout d'une place. "+restResponse.ErrorMessage+" Veuillez réessayer.");
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e.Message);
+                    return (false, "Erreur lors de la tentative d'ajout d'une place."+e.Message+" Veuillez réessayer.");
                 }
-                return (false, "Erreur lors de la tentative d'ajout du commentaire. Veuillez réessayer.");
             }
             else
             {

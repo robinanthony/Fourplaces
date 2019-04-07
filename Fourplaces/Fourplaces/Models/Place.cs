@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Storm.Mvvm;
 using Newtonsoft.Json;
 using System.IO;
 using Xamarin.Forms.Maps;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace Fourplaces.Models
 {

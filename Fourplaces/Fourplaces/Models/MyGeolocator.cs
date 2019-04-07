@@ -1,8 +1,6 @@
 ﻿using Plugin.Geolocator;
 using Plugin.Permissions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;

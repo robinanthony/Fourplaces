@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Fourplaces.Models
 {
     public class Token
     {
-
         [JsonProperty(PropertyName = "access_token")]
         public string AccessToken { get; set; }
 
@@ -51,8 +48,7 @@ namespace Fourplaces.Models
         }
 
         private Token()
-        {   
-        }
+        {   }
 
         public static void Destroy()
         {

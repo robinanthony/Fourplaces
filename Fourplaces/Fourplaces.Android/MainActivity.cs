@@ -7,6 +7,8 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Plugin.CurrentActivity;
+using Android.Support.Design.Widget;
+using Android.Support.V4.App;
 
 namespace Fourplaces.Droid
 {
@@ -36,5 +38,4 @@ namespace Fourplaces.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
 }
