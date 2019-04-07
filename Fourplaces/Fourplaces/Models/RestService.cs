@@ -121,7 +121,7 @@ namespace Fourplaces.Models
 
         public async Task LogIn(string email, string password)
         {
-            User utilisateur = new User(email, password);
+            UserData utilisateur = new UserData(email, password);
 
             string RestUrl = "https://td-api.julienmialon.com/auth/login";
             var uri = new Uri(string.Format(RestUrl, string.Empty));
@@ -194,7 +194,7 @@ namespace Fourplaces.Models
 
         public async Task<(Boolean, string)> SignIn(string email, string password, string firstName, string lastName)
         {
-            User utilisateur = new User(email, password, firstName, lastName);
+            UserData utilisateur = new UserData(email, password, firstName, lastName);
 
             string RestUrl = "https://td-api.julienmialon.com/auth/register";
             var uri = new Uri(string.Format(RestUrl, string.Empty));
@@ -390,6 +390,41 @@ namespace Fourplaces.Models
             {
                  return (false, "Une erreur est survenue lors de l'envoie de l'image. Merci de réessayer.");
             }
+        }
+
+        public async Task<(Boolean, UserData)> GetUserData()
+        {
+            Token.RefreshIfNecessary();
+
+            string RestUrl = "https://td-api.julienmialon.com/me";
+            var uri = new Uri(string.Format(RestUrl, string.Empty));
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, RestUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue(Token.Ticket.TokenType, Token.Ticket.AccessToken);
+
+            try
+            {
+                var response = await client.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    RestResponse<UserData> restResponse = JsonConvert.DeserializeObject<RestResponse<UserData>>(json);
+                    
+                    if ("true".Equals(restResponse.IsSuccess))
+                    {
+                        return (true, restResponse.Data);
+                    }
+                    else
+                    {
+                        // TODO Qu'est-ce que je fais ici?
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return (false, null);
         }
     }
 }

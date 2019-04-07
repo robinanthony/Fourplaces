@@ -22,6 +22,8 @@ namespace Fourplaces.ViewModels
 
         public ICommand AddPlaceCommand { get; set; }
 
+        public ICommand SeeUserInfos { get; set; }
+
         public string TitleLabel
         {
             get => this._titleLabel;
@@ -44,6 +46,7 @@ namespace Fourplaces.ViewModels
             this.TitleLabel = "Tous les lieux";
             this.RefreshCommand = new Command(RefreshClicked);
             this.AddPlaceCommand = new Command(AddPlaceClicked);
+            this.SeeUserInfos = new Command(SeeUserInfosClicked);
         }
 
         private void RefreshClicked()
@@ -66,6 +69,16 @@ namespace Fourplaces.ViewModels
         private async void OpenAddPlace()
         {
             await NavigationService.PushAsync<NewPlace>(new Dictionary<string, object>());
+        }
+
+        private void SeeUserInfosClicked()
+        {
+            OpenUserInfos();
+        }
+
+        private async void OpenUserInfos()
+        {
+            await NavigationService.PushAsync<User>(new Dictionary<string, object>());
         }
 
         public override async Task OnResume()

@@ -1,13 +1,6 @@
 ﻿using Fourplaces.ViewModels;
-
-using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
-using Storm.Mvvm;
 using Storm.Mvvm.Forms;
-using System;
-using System.Diagnostics;
-using Storm.Mvvm.Services;
 
 namespace Fourplaces
 {

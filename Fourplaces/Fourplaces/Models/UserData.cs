@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace Fourplaces.Models
 {
-    public class User : NotifierBase
+    public class UserData : NotifierBase
     {
         private int? _idPicture;
         private ImageSource _imageSource;
@@ -58,13 +58,13 @@ namespace Fourplaces.Models
             set => SetProperty(ref _imageSource, value);
         }
 
-        public User(string email, string password)
+        public UserData(string email, string password)
         {
             Email = email;
             Password = password;
         }
 
-        public User(string email, string password, string firstName, string lastName)
+        public UserData(string email, string password, string firstName, string lastName)
         {
             Email = email;
             Password = password;
@@ -73,7 +73,7 @@ namespace Fourplaces.Models
         }
 
         [JsonConstructor]
-        public User(int id, string first_name, string last_name, string email, int? image_id)
+        public UserData(int id, string first_name, string last_name, string email, int? image_id)
         {
             Id = id;
             FirstName = first_name;

@@ -66,14 +66,18 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <AbsoluteLayout>
+            <StackLayout>
+                <myUI:FloatingButton Source="userInfos.png"
+                                    Command="{Binding SeeUserInfos}"
+                                    WidthRequest="75"   
+                                    HeightRequest="75"
+                                    Grid.Column="0"/>
                 <myUI:FloatingButton Source="IconFAB.png"
-                                        Command="{Binding AddPlaceCommand}"
-                                        AbsoluteLayout.LayoutFlags="All"
-                                        AbsoluteLayout.LayoutBounds="1, 1, 0.25, 0.25"
-                                        Margin="15, 0, 0, 15"/>
-            </AbsoluteLayout>
-            
+                                    Command="{Binding AddPlaceCommand}"
+                                    WidthRequest="75"   
+                                    HeightRequest="75"
+                                    Grid.Column="1"/>
+            </StackLayout>
         </StackLayout>
     </StackLayout>
 </mvvm:BaseContentPage>

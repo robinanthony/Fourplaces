@@ -12,7 +12,7 @@ namespace Fourplaces.Models
         public string Date { get; set; }
 
         [JsonProperty(PropertyName = "author")]
-        public User Auteur { get; set; }
+        public UserData Auteur { get; set; }
 
         [JsonProperty(PropertyName ="text")]
         public string Texte { get; set; }
