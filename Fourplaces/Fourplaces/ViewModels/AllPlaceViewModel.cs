@@ -14,11 +14,8 @@ namespace Fourplaces.ViewModels
         private string _titleLabel;
         private ObservableCollection<Place> _allPlaces;
 
-        private bool _isVisible = true;
-        private bool _isRunning = true;
-
         public ICommand RefreshCommand { get; set; }
-        private bool _isRefreshing = false;
+        private bool _isRefreshing = true;
 
         public ICommand AddPlaceCommand { get; set; }
 
@@ -89,20 +86,7 @@ namespace Fourplaces.ViewModels
 
             Places = await RestService.Rest.LoadPlaces(MaLocation);
 
-            IsVisible = false;
-            IsRunning = false;
-        }
-
-        public bool IsVisible
-        {
-            get => _isVisible;
-            set => SetProperty(ref _isVisible, value);
-        }
-
-        public bool IsRunning
-        {
-            get => _isRunning;
-            set => SetProperty(ref _isRunning, value);
+            IsRefreshing = false;
         }
 
         public bool IsRefreshing

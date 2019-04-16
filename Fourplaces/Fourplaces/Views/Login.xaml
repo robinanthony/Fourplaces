@@ -14,24 +14,43 @@
         <Label Text="{Binding TitleLabel}"/>
     </NavigationPage.TitleView>
 
-    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-        <StackLayout VerticalOptions="StartAndExpand"  HorizontalOptions="FillAndExpand">
+    <AbsoluteLayout VerticalOptions="FillAndExpand" 
+                    HorizontalOptions="FillAndExpand">
 
-            <Label Text="Email" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-            <Entry x:Name="usernameEntry" Placeholder="email" Margin="0,0,0,5" Text="{Binding Email, Mode=TwoWay}"/>
+        <StackLayout AbsoluteLayout.LayoutFlags="All" 
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     VerticalOptions="StartAndExpand" 
+                     HorizontalOptions="FillAndExpand">
 
-            <Label Text="Mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-            <Entry x:Name="passwordEntry" Placeholder="mot de passe" IsPassword="true" Margin="0,0,0,5" Text="{Binding Password, Mode=TwoWay}"/>
+            <Label Text="Email" 
+                   TextColor="Black" 
+                   FontSize="20" 
+                   Margin="0,0,0,5"/>
+            
+            <Entry x:Name="usernameEntry" 
+                   Placeholder="Email" 
+                   Margin="0,0,0,5" 
+                   Text="{Binding Email, Mode=TwoWay}"/>
 
-            <Button Text="Se connecter" Command="{Binding LoginCommand}"></Button>
+            <Label Text="Mot de passe" 
+                   TextColor="Black" 
+                   FontSize="20" 
+                   Margin="0,0,0,5"/>
+                
+            <Entry x:Name="passwordEntry" 
+                   Placeholder="Mot de passe" 
+                   IsPassword="true" 
+                   Margin="0,0,0,5" 
+                   Text="{Binding Password, Mode=TwoWay}"/>
+
+            <Button Text="Se connecter" 
+                    Command="{Binding LoginCommand}"/>
         </StackLayout>
 
-        <AbsoluteLayout>
-            <myUI:FloatingButton Source="IconFAB.png"
-                                        Command="{Binding SigninCommand}"
-                                        AbsoluteLayout.LayoutFlags="All"
-                                        AbsoluteLayout.LayoutBounds="1, 1, 0.25, 0.25"
-                                        Margin="15, 0, 0, 15"/>
-        </AbsoluteLayout>
-    </StackLayout>
+        <myUI:FloatingButton Command="{Binding SigninCommand}" 
+                             Margin="15" 
+                             Source="IconFAB.png"
+                             AbsoluteLayout.LayoutFlags="PositionProportional"
+                             AbsoluteLayout.LayoutBounds="1, 1, 80, 80"/>
+    </AbsoluteLayout>
 </mvvm:BaseContentPage>

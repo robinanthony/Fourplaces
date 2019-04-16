@@ -13,11 +13,13 @@
         <Label Text="{Binding TitleLabel}"/>
     </NavigationPage.TitleView>
 
-    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <Label Text="Une connexion internet ainsi que la géolocalisation sont nécessaires pour charger cette page." IsVisible="{Binding IsVisible}" ></Label>
-            <ActivityIndicator IsRunning="{Binding IsRunning}" IsVisible="{Binding IsVisible}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,-1,-1" x:Name="activityIndicator" VerticalOptions="Center" HorizontalOptions="Center" Color="Azure"/>
+    <AbsoluteLayout VerticalOptions="FillAndExpand"
+                    HorizontalOptions="FillAndExpand">
 
+        <StackLayout AbsoluteLayout.LayoutFlags="All" 
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     VerticalOptions="StartAndExpand" 
+                     HorizontalOptions="FillAndExpand">
             <ListView x:Name="PlaceList" HasUnevenRows="True" SelectionMode="Single" ItemsSource="{Binding Places}" SelectedItem="{Binding CurrentPlace}" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:Place">
@@ -65,19 +67,19 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-            <StackLayout>
-                <myUI:FloatingButton Source="userInfos.png"
-                                    Command="{Binding SeeUserInfos}"
-                                    WidthRequest="75"   
-                                    HeightRequest="75"
-                                    Grid.Column="0"/>
-                <myUI:FloatingButton Source="IconFAB.png"
-                                    Command="{Binding AddPlaceCommand}"
-                                    WidthRequest="75"   
-                                    HeightRequest="75"
-                                    Grid.Column="1"/>
-            </StackLayout>
         </StackLayout>
-    </StackLayout>
+
+        <myUI:FloatingButton Source="userInfos.png"
+                             Margin="15" 
+                             Command="{Binding SeeUserInfos}"
+                             AbsoluteLayout.LayoutFlags="PositionProportional"
+                             AbsoluteLayout.LayoutBounds="0, 1, 80, 80"/>
+
+        <myUI:FloatingButton Source="IconFAB.png"
+                             Margin="15" 
+                             Command="{Binding AddPlaceCommand}"
+                             AbsoluteLayout.LayoutFlags="PositionProportional"
+                             AbsoluteLayout.LayoutBounds="1, 1, 80, 80"/>
+
+    </AbsoluteLayout>
 </mvvm:BaseContentPage>

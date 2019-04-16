@@ -2,11 +2,11 @@
 A student's project with Xamarin technology.
 
 # TODO List
-    - Mettre à jour l'ecran d'ajout d'une nouvelle place en vérifiant mieux la localisation
 
-    - Ajouter un ecran pour voir son profil
-    - Ajouter un ecran permettant de modifier son profil (voir pour laisser la possibilité de choisir une image déjà  existante)
+    - Ajouter un ecran permettant de modifier son profil (voir pour laisser la possibilité de choisir une image déjà existante)
     - Ajouter un ecran permettant de modifier son mdp
+
+	- Voir pour regler les problèmes de latence avec les images
 
     - Revoir la mise en page XAML de TOUTES les pages (pour qu'elles soient bien en format portrait COMME paysage)
 

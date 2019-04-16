@@ -66,13 +66,11 @@ namespace Fourplaces.Models
                     else
                     {
                         // Pb avec la geolocalisation ...
-                        await Application.Current.MainPage.DisplayAlert("Permissions non accordée", "L'application ne peut pas vous géolocaliser en raison de la non activation de cette fonctionnalité.", "OK");
                         return new Position(0, 0);
                     }
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Permissions non accordée", "L'application ne peut pas vous géolocaliser en raison d'une permission non accordée", "OK");
                     return new Position(0, 0);
                 }
             }

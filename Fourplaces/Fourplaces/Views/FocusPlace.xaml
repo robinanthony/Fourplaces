@@ -55,7 +55,66 @@
     </mvvm:BaseContentPage>
 
     <mvvm:BaseContentPage Icon="Comm_icon.png">
-        <StackLayout Orientation="Vertical">
+        <AbsoluteLayout VerticalOptions="FillAndExpand" 
+                        HorizontalOptions="FillAndExpand">
+
+            <StackLayout AbsoluteLayout.LayoutFlags="All" 
+                         AbsoluteLayout.LayoutBounds="0,0,1,1"
+                         VerticalOptions="StartAndExpand" 
+                         HorizontalOptions="FillAndExpand">
+
+                <ListView x:Name="CommentaireList" HasUnevenRows="True" ItemsSource="{Binding MaPlace.Commentaires}" SelectionMode="None" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Commentaire">
+                            <ViewCell>
+                                <Frame CornerRadius="4"
+                                       HasShadow="True"
+                                       Margin="4,4,4,4"
+                                       Padding="8,4,8,4"
+                                       HorizontalOptions="FillAndExpand"
+                                       VerticalOptions="Start">
+                                    <StackLayout HorizontalOptions="FillAndExpand"
+                                                 VerticalOptions="Start"
+                                                 Orientation="Horizontal">
+
+                                        <!--Interieur d'un élément de la liste-->
+                                        <Image Grid.Column="0"
+                                               HorizontalOptions="Start"
+                                               VerticalOptions="Center"
+                                               HeightRequest="48"
+                                               WidthRequest="48"
+                                               Source="{Binding Auteur.ImageSource}"/>
+
+                                        <StackLayout Orientation="Vertical"
+                                                     Grid.Column="1"
+                                                     HorizontalOptions="FillAndExpand"
+                                                     VerticalOptions="Center">
+                                            <Label Text="{Binding NomComplet}"
+                                                   TextColor="Black"
+                                                   LineBreakMode="WordWrap"
+                                                   FontSize="20"/>
+                                            <Label Text="{Binding Texte}"
+                                                   FontSize="10"
+                                                   TextColor="Gray"/>
+                                        </StackLayout>
+                                        <!--Fin interieur d'un élément de la liste-->
+
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+
+            <myUI:FloatingButton Command="{Binding AddCommentaireCommand}" 
+                                 Margin="15" 
+                                 Source="IconFAB.png"
+                                 AbsoluteLayout.LayoutFlags="PositionProportional"
+                                 AbsoluteLayout.LayoutBounds="1, 1, 80, 80"/>
+
+        </AbsoluteLayout>
+        <!--<StackLayout Orientation="Vertical">
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
                 <Label Text="Commentaires" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             </StackLayout>
@@ -75,7 +134,7 @@
                                     VerticalOptions="Start"
                                     Orientation="Horizontal">
 
-                                        <!--Interieur d'un élément de la liste-->
+                                        --><!--Interieur d'un élément de la liste--><!--
                                         <Image Grid.Column="0"
                                            HorizontalOptions="Start"
                                            VerticalOptions="Center"
@@ -96,7 +155,7 @@
                                                FontSize="10"
                                                TextColor="Gray"/>
                                         </StackLayout>
-                                        <!--Fin interieur d'un élément de la liste-->
+                                        --><!--Fin interieur d'un élément de la liste--><!--
 
                                     </StackLayout>
                                 </Frame>
@@ -114,6 +173,6 @@
                                         Margin="15, 0, 0, 15"/>
             </AbsoluteLayout>
 
-        </StackLayout>
+        </StackLayout>-->
     </mvvm:BaseContentPage>
 </TabbedPage>
