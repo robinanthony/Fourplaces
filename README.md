@@ -3,10 +3,11 @@ A student's project with Xamarin technology.
 
 # TODO List
 
-    - Ajouter un ecran permettant de modifier son profil (voir pour laisser la possibilité de choisir une image déjà existante)
-    - Ajouter un ecran permettant de modifier son mdp
+    - Gerer l'ecran permettant de modifier son profil (frontend + backend)
+    - Gerer l'ecran permettant de modifier son mdp (frontend)
+    - Gerer l'ecran permettant de voir son profil (frontend)
 
-	- Voir pour regler les problèmes de latence avec les images
+	  - Voir pour regler les problèmes de latence avec les images
 
     - Revoir la mise en page XAML de TOUTES les pages (pour qu'elles soient bien en format portrait COMME paysage)
 
@@ -14,6 +15,7 @@ A student's project with Xamarin technology.
 
 # Revoir la propreté du code :
     - Vérifier dans toutes les classes les privates / this
+	  - Vérifier que toutes les commandes sont "public Command MyCommand { get; private set; }"
     - Ordonner proprement les fonctions
     - Commenter les fonctions si necessaire
     - Retirer tous les using inutiles

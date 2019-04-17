@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Maps;
 
@@ -33,7 +34,7 @@ namespace Fourplaces.Models
             this.client = new HttpClient();
             //this.client.MaxResponseContentBufferSize = 256000 * 2; // Mis en commentaire pour que le buffer puisse grandir autant que besoin.
         }
-        
+
         private int GetDistanceBetweenPositions(Position source, Position dest)
         {
             int R = 6378;
@@ -81,7 +82,7 @@ namespace Fourplaces.Models
                         _places = new ObservableCollection<Place>(needOrder);
                     }
                     else
-                    { 
+                    {
                         // TODO Qu'est-ce que je fais ici?
                     }
                 }
@@ -157,14 +158,14 @@ namespace Fourplaces.Models
                 Debug.WriteLine(e.Message);
             }
         }
-        
+
         private Place maPlace;
 
         public async Task<Place> LoadPlace(long idPlace)
         {
             Token.RefreshIfNecessary();
 
-            string RestUrl = "https://td-api.julienmialon.com/places/"+ idPlace;
+            string RestUrl = "https://td-api.julienmialon.com/places/" + idPlace;
             var uri = new Uri(string.Format(RestUrl, string.Empty));
 
             try
@@ -310,7 +311,7 @@ namespace Fourplaces.Models
             Token.RefreshIfNecessary();
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://td-api.julienmialon.com/images");
-            request.Headers.Authorization = new AuthenticationHeaderValue(Token.Ticket.TokenType,Token.Ticket.AccessToken);
+            request.Headers.Authorization = new AuthenticationHeaderValue(Token.Ticket.TokenType, Token.Ticket.AccessToken);
 
             MultipartFormDataContent requestContent = new MultipartFormDataContent();
 
@@ -373,22 +374,22 @@ namespace Fourplaces.Models
                         }
                         else
                         {
-                            return (false, "Votre place n'a pû être ajouté. "+restResponse.ErrorMessage);
+                            return (false, "Votre place n'a pû être ajouté. " + restResponse.ErrorMessage);
                         }
                     }
                     else
                     {
-                        return (false, "Erreur lors de la tentative d'ajout d'une place. "+restResponse.ErrorMessage+" Veuillez réessayer.");
+                        return (false, "Erreur lors de la tentative d'ajout d'une place. " + restResponse.ErrorMessage + " Veuillez réessayer.");
                     }
                 }
                 catch (Exception e)
                 {
-                    return (false, "Erreur lors de la tentative d'ajout d'une place."+e.Message+" Veuillez réessayer.");
+                    return (false, "Erreur lors de la tentative d'ajout d'une place." + e.Message + " Veuillez réessayer.");
                 }
             }
             else
             {
-                 return (false, "Une erreur est survenue lors de l'envoie de l'image. Merci de réessayer.");
+                return (false, "Une erreur est survenue lors de l'envoie de l'image. Merci de réessayer.");
             }
         }
 
@@ -409,7 +410,7 @@ namespace Fourplaces.Models
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     RestResponse<UserData> restResponse = JsonConvert.DeserializeObject<RestResponse<UserData>>(json);
-                    
+
                     if ("true".Equals(restResponse.IsSuccess))
                     {
                         return (true, restResponse.Data);
@@ -426,5 +427,89 @@ namespace Fourplaces.Models
             }
             return (false, null);
         }
+
+        public async Task<(Boolean, string)> PatchPassword(string oldPassword, string newPassword)
+        {
+            Token.RefreshIfNecessary();
+
+            string RestUrl = "https://td-api.julienmialon.com/me/password";
+
+            var method = new HttpMethod("PATCH");
+
+            HttpRequestMessage request = new HttpRequestMessage(method, RestUrl) {
+                Content = new StringContent("{\"old_password\": \"" + oldPassword + "\", \"new_password\": \"" + newPassword + "\"}", Encoding.UTF8, "application/json") };
+            request.Headers.Authorization = new AuthenticationHeaderValue(Token.Ticket.TokenType, Token.Ticket.AccessToken);
+
+            try
+            {
+                var response = await client.SendAsync(request);
+
+                var json = await response.Content.ReadAsStringAsync();
+                RestResponse restResponse = JsonConvert.DeserializeObject<RestResponse>(json);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return ("true".Equals(restResponse.IsSuccess), "Modification du mot de passe prise en compte.");
+                }
+                else
+                {
+                    Console.WriteLine(request);
+                    Console.WriteLine(response);
+                    return (false, restResponse.ErrorMessage);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return (false, e.Message);
+            }
+        }
+
+        //private static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, string requestUri, HttpContent content, CancellationToken cancellationToken)
+        //{
+        //    var method = new HttpMethod("PATCH");
+        //    var request = new HttpRequestMessage(method, requestUri)
+        //    {
+        //        Content = content
+        //    };
+
+        //    var response = await client.SendAsync(request, cancellationToken);
+        //    return response;
+        //}
+
+
+        //    try
+        //    {
+        //        var response = await client.SendAsync(request);
+
+        //        var json = await response.Content.ReadAsStringAsync();
+        //        RestResponse restResponse = JsonConvert.DeserializeObject<RestResponse>(json);
+
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            if ("true".Equals(restResponse.IsSuccess))
+        //            {
+        //                return (true, "Ajout de la place effectué.");
+        //            }
+        //            else
+        //            {
+        //                return (false, "Votre place n'a pû être ajouté. " + restResponse.ErrorMessage);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return (false, "Erreur lors de la tentative d'ajout d'une place. " + restResponse.ErrorMessage + " Veuillez réessayer.");
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return (false, "Erreur lors de la tentative d'ajout d'une place." + e.Message + " Veuillez réessayer.");
+        //    }
+        //}
+        //else
+        //{
+        //    return (false, "Une erreur est survenue lors de l'envoie de l'image. Merci de réessayer.");
+        //}
     }
 }
