@@ -1,4 +1,6 @@
 ﻿using Fourplaces.Models;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using Storm.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,9 @@ namespace Fourplaces.ViewModels
         public Command TakeAnImage { get; private set; }
         public Command PatchMe { get; private set; }
         public Command PatchPassword { get; private set; }
+
+        private Boolean PatchDataNeeded;
+        private MediaFile _image;
 
         private string _oldPassword;
         public string OldPassword
@@ -54,6 +59,34 @@ namespace Fourplaces.ViewModels
             }
         }
 
+        private string _newFirstName;
+        public string NewFirstName
+        {
+            get
+            {
+                return this._newFirstName;
+            }
+            set
+            {
+                SetProperty(ref this._newFirstName, value);
+                PatchDataNeeded = true;
+            }
+        }
+
+        private string _newLastName;
+        public string NewLastName
+        {
+            get
+            {
+                return this._newLastName;
+            }
+            set
+            {
+                SetProperty(ref this._newLastName, value);
+                PatchDataNeeded = true;
+            }
+        }
+
         private UserData _myUser;
         public UserData MyUser
         {
@@ -75,6 +108,11 @@ namespace Fourplaces.ViewModels
             if (test)
             {
                 MyUser = data;
+
+                NewFirstName = MyUser.FirstName;
+                NewLastName = MyUser.LastName;
+
+                PatchDataNeeded = false;
             }
             else
             {
@@ -85,6 +123,9 @@ namespace Fourplaces.ViewModels
         public UserViewModel()
         {
             this.PatchPassword = new Command(PacthPasswordClicked);
+            this.PatchMe = new Command(PatchUserData);
+            this.TakeAPhoto = new Command(PhotoCommand);
+            this.TakeAnImage = new Command(ImageCommand);
         }
 
         private void PacthPasswordClicked()
@@ -122,6 +163,88 @@ namespace Fourplaces.ViewModels
             OldPassword = "";
             NewPassword = "";
             NewPasswordBis = "";
+        }
+
+        private async void PatchUserData()
+        {
+            // TODO
+        }
+
+        private void UpdatePicture()
+        {
+            if (_image == null)
+            {
+                MyUser.ImageSource = ImageSource.FromFile("no_pic.jpg");
+            }
+            else
+            {
+                MyUser.ImageSource = ImageSource.FromStream(() =>
+                {
+                    var stream = _image.GetStream();
+                    //_image.Dispose();
+                    return stream;
+                });
+            }
+            PatchDataNeeded = true;
+        }
+
+        private async void PhotoCommand()
+        {
+            await CrossMedia.Current.Initialize();
+
+            if (CrossMedia.Current.IsCameraAvailable || CrossMedia.Current.IsTakePhotoSupported)
+            {
+                // Supply media options for saving our photo after it's taken.
+                var mediaOptions = new StoreCameraMediaOptions
+                {
+                    //Directory = "Receipts",
+                    Name = DateTime.Now.ToShortTimeString() + ".jpg",
+                    PhotoSize = PhotoSize.MaxWidthHeight,
+                    MaxWidthHeight = 4096,
+                    CompressionQuality = 75,
+                    AllowCropping = true
+                };
+
+                // Take a photo of the business receipt.
+                var file = await CrossMedia.Current.TakePhotoAsync(mediaOptions);
+
+                if (file != null)
+                {
+                    _image = file;
+                    UpdatePicture();
+                }
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("No Camera", " No camera available.", "OK");
+            }
+        }
+
+        private async void ImageCommand()
+        {
+            await CrossMedia.Current.Initialize();
+
+            if (CrossMedia.Current.IsPickPhotoSupported)
+            {
+                var mediaOptions = new PickMediaOptions
+                {
+                    PhotoSize = PhotoSize.MaxWidthHeight,
+                    MaxWidthHeight = 4096,
+                    CompressionQuality = 75
+                };
+
+                var file = await CrossMedia.Current.PickPhotoAsync(mediaOptions);
+
+                if (file != null)
+                {
+                    _image = file;
+                    UpdatePicture();
+                }
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Photo picking unsupported", "Terrible erreur", "Continue");
+            }
         }
     }
 }

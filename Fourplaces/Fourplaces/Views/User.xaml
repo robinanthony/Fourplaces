@@ -40,11 +40,11 @@
             <StackLayout Orientation="Vertical" Margin="20,15,20,20">
                 <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
                     <Label Text="Prenom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                    <Entry Text="{Binding MyUser.FirstName, Mode=TwoWay}" 
+                    <Entry Text="{Binding NewFirstName, Mode=TwoWay}" 
                            Placeholder="Prenom"/>
                     
                     <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                    <Entry Text="{Binding MyUser.LastName, Mode=TwoWay}" 
+                    <Entry Text="{Binding NewLastName, Mode=TwoWay}" 
                            Placeholder="Nom"/>
                 </StackLayout>
                 <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
@@ -70,24 +70,26 @@
 
     <mvvm:BaseContentPage Icon="key_icon.png">
         <ScrollView>
-            <StackLayout>
-                <Label Text="Ancien mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <Entry Text="{Binding OldPassword, Mode=TwoWay}" 
+            <StackLayout Orientation="Vertical" Margin="20,15,20,20">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Ancien mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Entry Text="{Binding OldPassword, Mode=TwoWay}" 
                    IsPassword="true" 
                    Placeholder="ancien mot de passe"/>
 
-                <Label Text="Nouveau mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <Entry Text="{Binding NewPassword, Mode=TwoWay}" 
+                    <Label Text="Nouveau mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Entry Text="{Binding NewPassword, Mode=TwoWay}" 
                    IsPassword="true" 
                    Placeholder="nouveau mot de passe"/>
 
-                <Label Text="Repeter le nouveau mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                <Entry Text="{Binding NewPasswordBis, Mode=TwoWay}" 
+                    <Label Text="Repeter le nouveau mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Entry Text="{Binding NewPasswordBis, Mode=TwoWay}" 
                    IsPassword="true" 
                    Placeholder="nouveau mot de passe"/>
 
-                <Button Text="Valider" 
+                    <Button Text="Valider" 
                     Command="{Binding PatchPassword}"/>
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </mvvm:BaseContentPage>

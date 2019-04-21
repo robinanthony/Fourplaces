@@ -46,8 +46,7 @@
                         MapPosition="{Binding MaPlace.Position}"
                         MapPins="{Binding Pins}"
                         HorizontalOptions="Start"
-                        VerticalOptions="Center"
-                     />
+                        VerticalOptions="Center"/>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

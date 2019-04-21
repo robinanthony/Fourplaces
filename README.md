@@ -29,9 +29,10 @@ A student's project with Xamarin technology.
       résoudre ce problème.
     - Lors de la création d'une place, si j'utilise l'option "Prendre une photo"
       afin de donner une image à la place, une latence apparait. Hors, il n'y
-      a pas de problème avec l'option "Choisir une image existante". Je pense
-      que le problème vient plus de mon appareil que de l'application mais je
-      n'ai pas possibilité de vérifier.
+      a pas de problème avec l'option "Choisir une image existante". Le même
+      problème apparait lors de la mise à jour des informations de l'utilisateur.
+      Je pense que le problème vient plus de mon appareil que de l'application
+      mais je n'ai pas la possibilité de vérifier.
     - Lors de chaque requête REST, un refresh du token est effectué si cela
       s'avère nécessaire (il reste moins de 10 minutes de validité).
       Hors, si le token est déjà expiré, il faudrait déconnecter
