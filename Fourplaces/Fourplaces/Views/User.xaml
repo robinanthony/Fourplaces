@@ -8,67 +8,88 @@
             xmlns:myUI="clr-namespace:Fourplaces.MyUI"
             x:Class="Fourplaces.User"
             x:DataType="vm:UserViewModel">
-    
+
     <mvvm:BaseContentPage Icon="Info_icon.png">
-        <StackLayout>
-            <Label Text="{Binding MyUser.Id}"/>
-            <Label Text="{Binding MyUser.FirstName}"/>
-            <Label Text="{Binding MyUser.LastName}"/>
-            <Label Text="{Binding MyUser.Email}"/>
-            <Image HorizontalOptions="Start"
-                   VerticalOptions="Center"
-                   HeightRequest="96"
-                   WidthRequest="96"
-                   Source="{Binding MyUser.ImageSource}"/>
-        </StackLayout>
+        <ScrollView>
+            <StackLayout Orientation="Vertical" Margin="20,15,20,20">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Prénom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Label Text="{Binding MyUser.FirstName}" Margin="0,0,0,5"/>
+
+                    <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Label Text="{Binding MyUser.LastName}" Margin="0,0,0,5"/>
+
+                    <Label Text="Email" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Label Text="{Binding MyUser.Email}" Margin="0,0,0,5"/>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Image de profil" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Image HorizontalOptions="Start"
+                    VerticalOptions="Center"
+                    HeightRequest="200"
+                    WidthRequest="320"
+                    Source="{Binding MyUser.ImageSource}"/>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
     </mvvm:BaseContentPage>
 
     <mvvm:BaseContentPage Icon="pencil.png">
-        <StackLayout>
-            <Label Text="Nom"/>
-            <Entry Text="{Binding MyUser.LastName, Mode=TwoWay}" 
-                   Placeholder="Nom"/>
-            
-            <Label Text="Prenom"/>
-            <Entry Text="{Binding MyUser.FirstName, Mode=TwoWay}" 
-                   Placeholder="Prenom"/>
-            
-            <Image HorizontalOptions="Start"
-                   VerticalOptions="Center"
-                   HeightRequest="96"
-                   WidthRequest="96"
-                   Source="{Binding MyUser.ImageSource}"/>
+        <ScrollView>
+            <StackLayout Orientation="Vertical" Margin="20,15,20,20">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Prenom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Entry Text="{Binding MyUser.FirstName, Mode=TwoWay}" 
+                           Placeholder="Prenom"/>
+                    
+                    <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Entry Text="{Binding MyUser.LastName, Mode=TwoWay}" 
+                           Placeholder="Nom"/>
+                </StackLayout>
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Image de profil :" TextColor="Black" FontSize="20" Margin="0,0,0,5" />
+                    <Image HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           HeightRequest="200"
+                           WidthRequest="320"
+                           Source="{Binding MyUser.ImageSource}"/>
+                </StackLayout>
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Button Text="Prendre une photo" 
+                            Command="{Binding TakeAPhoto}"/>
+                    <Button Text="Choisir une image existante" 
+                            Command="{Binding TakeAnImage}"/>
 
-            <Button Text="Prendre une photo" 
-                    Command="{Binding TakeAPhoto}"/>
-            <Button Text="Choisir une image existante" 
-                    Command="{Binding TakeAnImage}"/>
-
-            <Button Text="Valider" 
-                    Command="{Binding PatchMe}"/>
-        </StackLayout>
+                    <Button Text="Valider" 
+                            Command="{Binding PatchMe}"/>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
     </mvvm:BaseContentPage>
 
     <mvvm:BaseContentPage Icon="key_icon.png">
-        <StackLayout>
-            <Label Text="Ancien mot de passe"/>
-            <Entry Text="{Binding OldPassword, Mode=TwoWay}" 
+        <ScrollView>
+            <StackLayout>
+                <Label Text="Ancien mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                <Entry Text="{Binding OldPassword, Mode=TwoWay}" 
                    IsPassword="true" 
                    Placeholder="ancien mot de passe"/>
-            
-            <Label Text="Nouveau mot de passe"/>
-            <Entry Text="{Binding NewPassword, Mode=TwoWay}" 
+
+                <Label Text="Nouveau mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                <Entry Text="{Binding NewPassword, Mode=TwoWay}" 
                    IsPassword="true" 
                    Placeholder="nouveau mot de passe"/>
 
-            <Label Text="Repeter le nouveau mot de passe"/>
-            <Entry Text="{Binding NewPasswordBis, Mode=TwoWay}" 
+                <Label Text="Repeter le nouveau mot de passe" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                <Entry Text="{Binding NewPasswordBis, Mode=TwoWay}" 
                    IsPassword="true" 
                    Placeholder="nouveau mot de passe"/>
 
-            <Button Text="Valider" 
+                <Button Text="Valider" 
                     Command="{Binding PatchPassword}"/>
-        </StackLayout>
+            </StackLayout>
+        </ScrollView>
     </mvvm:BaseContentPage>
     
 </TabbedPage>

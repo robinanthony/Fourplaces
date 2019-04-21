@@ -25,16 +25,16 @@
             <Button Text="Prendre une photo" Command="{Binding TakeAPhoto}"/>
             <Button Text="Choisir une image existante" Command="{Binding TakeAnImage}"/>
 
-            <Label Text="Nom"/>
+            <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             <Entry Text="{Binding Nom, Mode=TwoWay}" Placeholder="Nom"/>
 
-            <Label Text="Description"/>
+            <Label Text="Description" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             <Entry Text="{Binding Description, Mode=TwoWay}" Placeholder="Description"/>
 
-            <Label Text="Latitude"/>
+            <Label Text="Latitude" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             <Entry Text="{Binding Latitude, Mode=TwoWay}" Placeholder="Latitude"/>
 
-            <Label Text="Longitude"/>
+            <Label Text="Longitude" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
             <Entry Text="{Binding Longitude, Mode=TwoWay}" Placeholder="Longitude"/>
 
             <Button Text="Prendre ma position" Command="{Binding GetPosition}"/>

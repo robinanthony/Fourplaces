@@ -87,7 +87,7 @@ namespace Fourplaces.ViewModels
             this.PatchPassword = new Command(PacthPasswordClicked);
         }
 
-        private void PacthPasswordClicked(object _)
+        private void PacthPasswordClicked()
         {
             PatchPwd();
         }
