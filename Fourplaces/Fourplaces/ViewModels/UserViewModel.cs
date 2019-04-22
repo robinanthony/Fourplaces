@@ -21,6 +21,13 @@ namespace Fourplaces.ViewModels
         private MediaFile _image;
         private Boolean PicNeedPatch;
 
+        private string _titleLabel;
+        public string TitleLabel
+        {
+            get => this._titleLabel;
+            set => SetProperty(ref this._titleLabel, value);
+        }
+
         private string _oldPassword;
         public string OldPassword
         {
@@ -79,6 +86,9 @@ namespace Fourplaces.ViewModels
         public override async Task OnResume()
         {
             await base.OnResume();
+
+            this.TitleLabel = "Informations utilisateur";
+
             (Boolean test, UserData data) = await RestService.Rest.GetUserData();
 
             if (test)

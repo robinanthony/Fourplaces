@@ -8,6 +8,9 @@
             xmlns:myUI="clr-namespace:Fourplaces.MyUI"
             x:Class="Fourplaces.User"
             x:DataType="vm:UserViewModel">
+    <NavigationPage.TitleView>
+        <Label Text="{Binding TitleLabel}"/>
+    </NavigationPage.TitleView>
 
     <mvvm:BaseContentPage Icon="Info_icon.png">
         <ScrollView>

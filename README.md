@@ -18,8 +18,6 @@ A student's project with Xamarin technology.
     - Toute l'application est normalement accessible en format Paysage et
       Portrait.
 
-# Fonctionnalités non opérationnelles :
-
 # Problèmes connues :
     - Si je fais défiler rapidement la page présentant toutes les places
       connues, une erreur "OutOfMemoryError" apparait. Je pense que cela
