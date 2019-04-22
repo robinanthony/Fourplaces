@@ -11,16 +11,17 @@ namespace Fourplaces.ViewModels
 {
     class AllPlaceViewModel : ViewModelBase
     {
-        private string _titleLabel;
-        private ObservableCollection<Place> _allPlaces;
-
-        public ICommand RefreshCommand { get; set; }
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
+        public ICommand RefreshCommand { get; private set; }
         private bool _isRefreshing = true;
 
-        public ICommand AddPlaceCommand { get; set; }
+        public ICommand AddPlaceCommand { get; private set; }
 
-        public ICommand SeeUserInfos { get; set; }
+        public ICommand SeeUserInfos { get; private set; }
 
+        private string _titleLabel;
         public string TitleLabel
         {
             get => this._titleLabel;
@@ -29,6 +30,7 @@ namespace Fourplaces.ViewModels
 
         public Position MaLocation { get; set; }
 
+        private ObservableCollection<Place> _allPlaces;
         public  ObservableCollection<Place> Places
         {
             get => this._allPlaces;
@@ -38,24 +40,68 @@ namespace Fourplaces.ViewModels
             }
         }
 
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+
+        private Place _currentPlace;
+        public Place CurrentPlace
+        {
+            get => this._currentPlace;
+            set
+            {
+                if (SetProperty(ref this._currentPlace, value))
+                {
+                    OpenFocusPlace(this._currentPlace);
+                }
+            }
+        }
+
+//==============================================================================
+//============================== FCT PRINCIPALES ===============================
+//==============================================================================
         public AllPlaceViewModel()
         {
             this.TitleLabel = "Tous les lieux";
-            this.RefreshCommand = new Command(RefreshClicked);
-            this.AddPlaceCommand = new Command(AddPlaceClicked);
-            this.SeeUserInfos = new Command(SeeUserInfosClicked);
+            this.RefreshCommand = new Command(this.RefreshClicked);
+            this.AddPlaceCommand = new Command(this.AddPlaceClicked);
+            this.SeeUserInfos = new Command(this.SeeUserInfosClicked);
         }
 
+        public override async Task OnResume()
+        {
+            await base.OnResume();
+
+            this.MaLocation = await MyGeolocator.GetLocation();
+
+            this.Places = await RestService.Rest.LoadPlaces(this.MaLocation);
+
+            this.IsRefreshing = false;
+        }
+
+//==============================================================================
+//================================ FCT METIERS =================================
+//==============================================================================
+        public async void OpenFocusPlace(Place place)
+        {
+            await NavigationService.PushAsync<FocusPlace>(new Dictionary<string, object>() { { "PlaceId", place.Id } });
+        }
+
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
         private void RefreshClicked()
         {
-            RefreshPlaces();
-            IsRefreshing = false;
+            this.RefreshPlaces();
+            this.IsRefreshing = false;
         }
 
         private async void RefreshPlaces()
         {
-            MaLocation = await MyGeolocator.GetLocation();
-            Places = await RestService.Rest.LoadPlaces(MaLocation);
+            this.MaLocation = await MyGeolocator.GetLocation();
+            this.Places = await RestService.Rest.LoadPlaces(this.MaLocation);
         }
 
         private void AddPlaceClicked()
@@ -78,40 +124,5 @@ namespace Fourplaces.ViewModels
             await NavigationService.PushAsync<User>(new Dictionary<string, object>());
         }
 
-        public override async Task OnResume()
-        {
-            await base.OnResume();
-
-            MaLocation = await MyGeolocator.GetLocation();
-
-            Places = await RestService.Rest.LoadPlaces(MaLocation);
-
-            IsRefreshing = false;
-        }
-
-        public bool IsRefreshing
-        {
-            get => _isRefreshing;
-            set => SetProperty(ref _isRefreshing, value);
-        }
-
-        private Place _currentPlace;
-
-        public Place CurrentPlace
-        {
-            get => _currentPlace;
-            set
-            {
-                if (SetProperty(ref _currentPlace, value))
-                {
-                    OpenFocusPlace(_currentPlace);
-                }
-            }
-        }
-
-        public async void OpenFocusPlace(Place place)
-        {
-            await NavigationService.PushAsync<FocusPlace>(new Dictionary<string, object>() { { "PlaceId", place.Id} });
-        }
     }
 }

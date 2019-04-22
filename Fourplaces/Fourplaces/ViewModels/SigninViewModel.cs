@@ -9,37 +9,81 @@ namespace Fourplaces.ViewModels
 {
     class SigninViewModel : ViewModelBase
     {
-        public ICommand SigninCommand { get; set; }
-        public string TitleLabel { get; set; }
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
+        public ICommand SigninCommand { get; private set; }
+
+        private string _titleLabel;
+        public string TitleLabel
+        {
+            get => this._titleLabel;
+            set => SetProperty(ref this._titleLabel, value);
+        }
 
         private string _email;
-        private string _password;
-        private string _passwordTwo;
-        private string _firstName;
-        private string _lastName;
+        public string Email
+        {
+            get => this._email;
+            set => SetProperty(ref this._email, value);
+        }
 
+        private string _password;
+        public string Password
+        {
+            get => this._password;
+            set => SetProperty(ref this._password, value);
+        }
+
+        private string _passwordTwo;
+        public string PasswordTwo
+        {
+            get => this._passwordTwo;
+            set => SetProperty(ref this._passwordTwo, value);
+        }
+
+        private string _firstName;
+        public string FirstName
+        {
+            get => this._firstName;
+            set => SetProperty(ref this._firstName, value);
+        }
+
+        private string _lastName;
+        public string LastName
+        {
+            get => this._lastName;
+            set => SetProperty(ref this._lastName, value);
+        }
+
+//==============================================================================
+//============================== FCT PRINCIPALES ===============================
+//==============================================================================
         public SigninViewModel()
         {
             this.TitleLabel = "Création d'un nouveau compte";
-            this.SigninCommand = new Command(SigninClicked);
+            this.SigninCommand = new Command(this.SigninClicked);
         }
 
-        private void SigninClicked(object _)
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
+        private void SigninClicked()
         {
             Signin();
         }
 
         private async void Signin()
         {
-            if (!string.IsNullOrWhiteSpace(Email))
+            if (!string.IsNullOrWhiteSpace(this.Email))
             {
-                if (!string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName))
+                if (!string.IsNullOrWhiteSpace(this.FirstName) && !string.IsNullOrWhiteSpace(this.LastName))
                 {
-                    if (!string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(PasswordTwo))
+                    if (!string.IsNullOrWhiteSpace(this.Password) && !string.IsNullOrWhiteSpace(this.PasswordTwo))
                     {
-                        if((Password == PasswordTwo))
+                        if((this.Password == this.PasswordTwo))
                         {
-                            (Boolean test, string message) = await RestService.Rest.SignIn(Email, Password, FirstName, LastName);
+                            (Boolean test, string message) = await RestService.Rest.SignIn(this.Email, this.Password, this.FirstName, this.LastName);
                             if (test)
                             {
                                 await Application.Current.MainPage.DisplayAlert("Inscription", message, "OK");
@@ -71,38 +115,9 @@ namespace Fourplaces.ViewModels
             { // Problème email
                 await Application.Current.MainPage.DisplayAlert("Inscription", "Votre adresse email ne peut être vide.", "OK");
             }
-            Password = "";
-            PasswordTwo = "";
+            this.Password = "";
+            this.PasswordTwo = "";
         }
 
-        public string Email
-        {
-            get => this._email;
-            set => SetProperty(ref this._email, value);
-        }
-
-        public string Password
-        {
-            get => this._password;
-            set => SetProperty(ref this._password, value);
-        }
-
-        public string PasswordTwo
-        {
-            get => this._passwordTwo;
-            set => SetProperty(ref this._passwordTwo, value);
-        }
-
-        public string FirstName
-        {
-            get => this._firstName;
-            set => SetProperty(ref this._firstName, value);
-        }
-
-        public string LastName
-        {
-            get => this._lastName;
-            set => SetProperty(ref this._lastName, value);
-        }
     }
 }

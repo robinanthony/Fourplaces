@@ -3,23 +3,22 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Storm.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Fourplaces.ViewModels
 {
     public class UserViewModel : ViewModelBase
     {
-        public Command TakeAPhoto { get; private set; }
-        public Command TakeAnImage { get; private set; }
-        public Command PatchMe { get; private set; }
-        public Command PatchPassword { get; private set; }
-        
-        private MediaFile _image;
-        private Boolean PicNeedPatch;
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
+        public ICommand TakeAPhoto { get; private set; }
+        public ICommand TakeAnImage { get; private set; }
+        public ICommand PatchMe { get; private set; }
+        public ICommand PatchPassword { get; private set; }
 
         private string _titleLabel;
         public string TitleLabel
@@ -63,6 +62,8 @@ namespace Fourplaces.ViewModels
             set => SetProperty(ref this._newLastName, value);
         }
 
+        private Boolean PicNeedPatch;
+        private MediaFile _image;
         private ImageSource _newPicture;
         public ImageSource NewPicture
         {
@@ -81,6 +82,17 @@ namespace Fourplaces.ViewModels
                 this.NewLastName = this.MyUser.LastName;
                 this.NewPicture = this.MyUser.ImageSource;
             }
+        }
+
+//==============================================================================
+//============================== FCT PRINCIPALES ===============================
+//==============================================================================
+        public UserViewModel()
+        {
+            this.PatchPassword = new Command(this.PacthPasswordClicked);
+            this.PatchMe = new Command(this.PatchUserData);
+            this.TakeAPhoto = new Command(this.PhotoCommand);
+            this.TakeAnImage = new Command(this.ImageCommand);
         }
 
         public override async Task OnResume()
@@ -102,14 +114,9 @@ namespace Fourplaces.ViewModels
             }
         }
 
-        public UserViewModel()
-        {
-            this.PatchPassword = new Command(PacthPasswordClicked);
-            this.PatchMe = new Command(PatchUserData);
-            this.TakeAPhoto = new Command(PhotoCommand);
-            this.TakeAnImage = new Command(ImageCommand);
-        }
-
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
         private void PacthPasswordClicked()
         {
             PatchPwd();
@@ -119,7 +126,7 @@ namespace Fourplaces.ViewModels
         {
             if (!string.IsNullOrWhiteSpace(this.NewPassword) && !string.IsNullOrWhiteSpace(this.NewPasswordBis) && !string.IsNullOrWhiteSpace(this.OldPassword))
             {
-                if (NewPassword == NewPasswordBis)
+                if (this.NewPassword == this.NewPasswordBis)
                 {
                     (Boolean test, string message) = await RestService.Rest.PatchPassword(this.OldPassword, this.NewPassword);
 
@@ -152,15 +159,15 @@ namespace Fourplaces.ViewModels
             if ( this.PicNeedPatch)
             { // Si l'image a été modifiée
                 MemoryStream memoryStream = new MemoryStream();
-                _image.GetStream().CopyTo(memoryStream);
+                this._image.GetStream().CopyTo(memoryStream);
                 byte[] pictureArray = memoryStream.ToArray();
 
-                (Boolean test, string message) = await RestService.Rest.PatchUser(NewFirstName, NewLastName, pictureArray);
+                (Boolean test, string message) = await RestService.Rest.PatchUser(this.NewFirstName, this.NewLastName, pictureArray);
                 await App.Current.MainPage.DisplayAlert("Mise à jour utilisateur", message, "OK");
             }
             else if (!this.MyUser.FirstName.Equals(this.NewFirstName) || !this.MyUser.LastName.Equals(this.NewLastName))
             { // Si l'identité d'user a été modifié
-                (Boolean test, string message) = await RestService.Rest.PatchUser(NewFirstName, NewLastName, null);
+                (Boolean test, string message) = await RestService.Rest.PatchUser(this.NewFirstName, this.NewLastName, null);
                 await App.Current.MainPage.DisplayAlert("Mise à jour utilisateur", message, "OK");
             }
             else
@@ -171,7 +178,7 @@ namespace Fourplaces.ViewModels
 
         private void UpdatePicture()
         {
-            if (_image == null)
+            if (this._image == null)
             {
                 this.NewPicture = ImageSource.FromFile("no_pic.jpg");
             }
@@ -179,7 +186,7 @@ namespace Fourplaces.ViewModels
             {
                 this.NewPicture = ImageSource.FromStream(() =>
                 {
-                    var stream = _image.GetStream();
+                    var stream = this._image.GetStream();
                     return stream;
                 });
             }
@@ -241,5 +248,6 @@ namespace Fourplaces.ViewModels
                 await App.Current.MainPage.DisplayAlert("Photo picking unsupported", "Terrible erreur", "Continue");
             }
         }
+
     }
 }

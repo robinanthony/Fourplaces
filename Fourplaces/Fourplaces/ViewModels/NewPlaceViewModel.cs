@@ -6,69 +6,92 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Fourplaces.ViewModels
 {
     public class NewPlaceViewModel : ViewModelBase
     {
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
+        public ICommand TakeAPhoto { get; private set; }
+        public ICommand TakeAnImage { get; private set; }
+        public ICommand GetPosition { get; private set; }
+        public ICommand AddPlace { get; private set; }
+
+        private string _titleLabel;
+        public string TitleLabel
+        {
+            get => this._titleLabel;
+            set => SetProperty(ref this._titleLabel, value);
+        }
+
         private string _nomLieu;
+        public string Nom
+        {
+            get => this._nomLieu;
+            set => SetProperty(ref this._nomLieu, value);
+        }
+
         private string _descriptionLieu;
+        public string Description
+        {
+            get => this._descriptionLieu;
+            set => SetProperty(ref this._descriptionLieu, value);
+        }
 
         private string _latitudeLieu;
+        public string Latitude
+        {
+            get => this._latitudeLieu;
+            set => SetProperty(ref this._latitudeLieu, value);
+        }
+
         private string _longitudeLieu;
+        public string Longitude
+        {
+            get => this._longitudeLieu;
+            set => SetProperty(ref this._longitudeLieu, value);
+        }
 
         private MediaFile _image;
         private ImageSource _imageSource;
-
-        public Command TakeAPhoto { get; private set; }
-        public Command TakeAnImage { get; private set; }
-        public Command GetPosition { get; private set; }
-        public Command AddPlace { get; private set; }
-        
-        public string TitleLabel { get; set; }
-
-        public string Nom
-        {
-            get => _nomLieu;
-            set => SetProperty(ref _nomLieu, value);
-        }
-
-        public string Description
-        {
-            get => _descriptionLieu;
-            set => SetProperty(ref _descriptionLieu, value);
-        }
-
-        public string Latitude
-        {
-            get => _latitudeLieu;
-            set => SetProperty(ref _latitudeLieu, value);
-        }
-
-        public string Longitude
-        {
-            get => _longitudeLieu;
-            set => SetProperty(ref _longitudeLieu, value);
-        }
-
         public ImageSource ImageSource
         {
-            get => _imageSource;
-            set => SetProperty(ref _imageSource, value);
+            get => this._imageSource;
+            set => SetProperty(ref this._imageSource, value);
         }
 
+//==============================================================================
+//============================== FCT PRINCIPALES ===============================
+//==============================================================================
+        public NewPlaceViewModel()
+        {
+            this.TitleLabel = "Ajout d'un lieu";
+            this.TakeAnImage = new Command(this.ImageCommand);
+            this.TakeAPhoto = new Command(this.PhotoCommand);
+            this.GetPosition = new Command(this.PositionCommand);
+            this.AddPlace = new Command(this.AddCommand);
+
+            UpdatePicture();
+        }
+
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
         private void UpdatePicture()
         {
-            if (_image == null)
+            if (this._image == null)
             {
-                ImageSource = ImageSource.FromFile("no_pic.jpg");
+                this.ImageSource = ImageSource.FromFile("no_pic.jpg");
             }
             else
             {
-                ImageSource = ImageSource.FromStream(() =>
+                this.ImageSource = ImageSource.FromStream(() =>
                 {
-                    var stream = _image.GetStream();
+                    var stream = this._image.GetStream();
                     return stream;
                 });
             }
@@ -96,7 +119,7 @@ namespace Fourplaces.ViewModels
 
                 if (file != null)
                 {
-                    _image = file;
+                    this._image = file;
                     UpdatePicture();
                 }
             }
@@ -122,7 +145,7 @@ namespace Fourplaces.ViewModels
 
                 if (file != null)
                 {
-                    _image = file;
+                    this._image = file;
                     UpdatePicture();
                 }
             }
@@ -135,29 +158,29 @@ namespace Fourplaces.ViewModels
         private async void PositionCommand()
         {
             var res = await MyGeolocator.GetLocation();
-            Latitude = res.Latitude.ToString("G", CultureInfo.InvariantCulture);
-            Longitude = res.Longitude.ToString("G", CultureInfo.InvariantCulture);
+            this.Latitude = res.Latitude.ToString("G", CultureInfo.InvariantCulture);
+            this.Longitude = res.Longitude.ToString("G", CultureInfo.InvariantCulture);
         }
 
         private async void AddCommand()
         {
-            if (_image != null)
+            if (this._image != null)
             {
-                if (!string.IsNullOrWhiteSpace(Nom) && !string.IsNullOrWhiteSpace(Description))
+                if (!string.IsNullOrWhiteSpace(this.Nom) && !string.IsNullOrWhiteSpace(this.Description))
                 {
-                    if (!string.IsNullOrWhiteSpace(Latitude) && !string.IsNullOrWhiteSpace(Longitude))
+                    if (!string.IsNullOrWhiteSpace(this.Latitude) && !string.IsNullOrWhiteSpace(this.Longitude))
                     {
                         string pattern = @"^[\-]?\d+(\.\d+)*$";
 
                         Regex rgx = new Regex(pattern);
 
-                        if (rgx.IsMatch(Latitude) && rgx.IsMatch(Longitude))
+                        if (rgx.IsMatch(this.Latitude) && rgx.IsMatch(this.Longitude))
                         {
                             MemoryStream memoryStream = new MemoryStream();
-                            _image.GetStream().CopyTo(memoryStream);
+                            this._image.GetStream().CopyTo(memoryStream);
                             byte[] pictureArray = memoryStream.ToArray();
 
-                            (Boolean test, string infos) = await RestService.Rest.AddPlace(Nom, Description, pictureArray, Latitude, Longitude);
+                            (Boolean test, string infos) = await RestService.Rest.AddPlace(this.Nom, this.Description, pictureArray, this.Latitude, this.Longitude);
 
                             if (test)
                             {
@@ -190,15 +213,5 @@ namespace Fourplaces.ViewModels
             }
         }
 
-        public NewPlaceViewModel()
-        {
-            this.TitleLabel = "Ajout d'un lieu";
-            this.TakeAnImage = new Command(ImageCommand);
-            this.TakeAPhoto = new Command(PhotoCommand);
-            this.GetPosition = new Command(PositionCommand);
-            this.AddPlace = new Command(AddCommand);
-
-            UpdatePicture();
-        }
     }
 }

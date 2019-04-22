@@ -10,32 +10,43 @@ namespace Fourplaces.ViewModels
 {
     public class NewCommentaireViewModel : ViewModelBase
     {
-        private long _placeId;
-        private string _monCommentaire;
-        public ICommand AddCommand { get; set; }
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
+        public ICommand AddCommand { get; private set; }
 
+        private long _placeId;
         [NavigationParameter]
         public long PlaceId
         {
-            get { return _placeId; }
+            get { return this._placeId; }
             set
             {
-                SetProperty(ref _placeId, value);
+                SetProperty(ref this._placeId, value);
             }
         }
 
-        public string TitleLabel { get; set; }
+        private string _titleLabel;
+        public string TitleLabel
+        {
+            get => this._titleLabel;
+            set => SetProperty(ref this._titleLabel, value);
+        }
 
+        private string _monCommentaire;
         public string MonCommentaire
         {
             get => this._monCommentaire;
             set => SetProperty(ref this._monCommentaire, value);
         }
 
+//==============================================================================
+//============================== FCT PRINCIPALES ===============================
+//==============================================================================
         public NewCommentaireViewModel()
         {
-            AddCommand = new Command(AddClicked);
-            TitleLabel = "Votre nouveau commentaire";
+            this.AddCommand = new Command(this.AddClicked);
+            this.TitleLabel = "Votre nouveau commentaire";
         }
 
         public override async Task OnResume()
@@ -43,6 +54,9 @@ namespace Fourplaces.ViewModels
             await base.OnResume();
         }
 
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
         private void AddClicked()
         {
             AddCommentaire();
@@ -50,9 +64,9 @@ namespace Fourplaces.ViewModels
 
         private async void AddCommentaire()
         {
-            if (!string.IsNullOrWhiteSpace(MonCommentaire))
+            if (!string.IsNullOrWhiteSpace(this.MonCommentaire))
             {
-                (Boolean test, string texte) = await RestService.Rest.AddCommentaire(PlaceId, MonCommentaire);
+                (Boolean test, string texte) = await RestService.Rest.AddCommentaire(this.PlaceId, this.MonCommentaire);
                 if (test)
                 {
                     await Application.Current.MainPage.DisplayAlert("Commentaire ajouté", texte, "OK");
