@@ -1,10 +1,16 @@
 ﻿# Fourplaces
 A student's project with Xamarin technology.
 
+# Numéro étudiant :
+    - o2152694
+
+# Lien GitHug :
+    - https://github.com/robinanthony/Fourplaces
+
 # Appareil utilisé lors des tests :
     - Wiko Pulp 4G, Android version 5.1.1 (API 22)
 
-# Fonctionnalités :
+# Fonctionnalités implémentées :
     - Se connecter
     - Créer un compte
     - Voir la liste des places existantes
@@ -18,7 +24,7 @@ A student's project with Xamarin technology.
     - Toute l'application est normalement accessible en format Paysage et
       Portrait.
 
-# Problèmes connues :
+# Problèmes connus :
     - Si je fais défiler rapidement la page présentant toutes les places
       connues, une erreur "OutOfMemoryError" apparait. Je pense que cela
       vient du fait que trop d'image doivent être chargées en même temps
