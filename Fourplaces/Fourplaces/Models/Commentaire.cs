@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
 using Storm.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Fourplaces.Models
 {
     public class Commentaire : NotifierBase
     {
+
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
         [JsonProperty(PropertyName = "date")]
         public string Date { get; set; }
 

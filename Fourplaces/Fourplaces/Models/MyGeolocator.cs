@@ -9,32 +9,9 @@ namespace Fourplaces.Models
 {
     public static class MyGeolocator
     {
-        private static async Task<Plugin.Geolocator.Abstractions.Position> GetCurrentLocation()
-        {
-            Plugin.Geolocator.Abstractions.Position myPos = null;
-            try
-            {
-                var locator = CrossGeolocator.Current;
-                locator.DesiredAccuracy = 100;
-                myPos = await locator.GetLastKnownLocationAsync();
-
-                if (myPos != null)
-                {
-                    return myPos;
-                }
-                else
-                {
-                    Console.WriteLine("Erreur, la dernière position connue est nulle ! ");
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Unable to get location : " + e.Message);
-                return null;
-            }
-        }
-
+//==============================================================================
+//================================ FCT METIERS =================================
+//==============================================================================
         public static async Task<Position> GetLocation()
         {
             Plugin.Geolocator.Abstractions.Position myPos = null;
@@ -78,6 +55,35 @@ namespace Fourplaces.Models
             {
                 Console.WriteLine("Erreur : " + e.Message);
                 return new Position(0, 0);
+            }
+        }
+
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
+        private static async Task<Plugin.Geolocator.Abstractions.Position> GetCurrentLocation()
+        {
+            Plugin.Geolocator.Abstractions.Position myPos = null;
+            try
+            {
+                var locator = CrossGeolocator.Current;
+                locator.DesiredAccuracy = 100;
+                myPos = await locator.GetLastKnownLocationAsync();
+
+                if (myPos != null)
+                {
+                    return myPos;
+                }
+                else
+                {
+                    Console.WriteLine("Erreur, la dernière position connue est nulle ! ");
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unable to get location : " + e.Message);
+                return null;
             }
         }
     }

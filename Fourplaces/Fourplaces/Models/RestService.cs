@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Maps;
 
@@ -14,6 +13,9 @@ namespace Fourplaces.Models
 {
     public class RestService
     {
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
         private HttpClient client;
         private static RestService _rest;
 
@@ -29,29 +31,20 @@ namespace Fourplaces.Models
             }
         }
 
+        private Place maPlace;
+
+//==============================================================================
+//============================== FCT PRINCIPALES ===============================
+//==============================================================================
         private RestService()
         {
             this.client = new HttpClient();
             //this.client.MaxResponseContentBufferSize = 256000 * 2; // Mis en commentaire pour que le buffer puisse grandir autant que besoin.
         }
 
-        private int GetDistanceBetweenPositions(Position source, Position dest)
-        {
-            int R = 6378;
-
-            double SourceLat = GetRadian(source.Latitude);
-            double SourceLong = GetRadian(source.Longitude);
-            double DestLat = GetRadian(dest.Latitude);
-            double DestLong = GetRadian(dest.Longitude);
-
-            return (int)(R * (Math.PI / 2 - Math.Asin(Math.Sin(DestLat) * Math.Sin(SourceLat) + Math.Cos(DestLong - SourceLong) * Math.Cos(DestLat) * Math.Cos(SourceLat))));
-        }
-
-        private double GetRadian(double degree)
-        {
-            return Math.PI * degree / 180;
-        }
-
+//==============================================================================
+//================================ FCT METIERS =================================
+//==============================================================================
         public async Task<ObservableCollection<Place>> LoadPlaces(Position MaLocation)
         {
             Token.RefreshIfNecessary();
@@ -158,8 +151,6 @@ namespace Fourplaces.Models
                 Debug.WriteLine(e.Message);
             }
         }
-
-        private Place maPlace;
 
         public async Task<Place> LoadPlace(long idPlace)
         {
@@ -436,8 +427,10 @@ namespace Fourplaces.Models
 
             var method = new HttpMethod("PATCH");
 
-            HttpRequestMessage request = new HttpRequestMessage(method, RestUrl) {
-                Content = new StringContent("{\"old_password\": \"" + oldPassword + "\", \"new_password\": \"" + newPassword + "\"}", Encoding.UTF8, "application/json") };
+            HttpRequestMessage request = new HttpRequestMessage(method, RestUrl)
+            {
+                Content = new StringContent("{\"old_password\": \"" + oldPassword + "\", \"new_password\": \"" + newPassword + "\"}", Encoding.UTF8, "application/json")
+            };
             request.Headers.Authorization = new AuthenticationHeaderValue(Token.Ticket.TokenType, Token.Ticket.AccessToken);
 
             try
@@ -468,7 +461,7 @@ namespace Fourplaces.Models
         public async Task<(Boolean, string)> PatchUser(string newFirstName, string newLastName, byte[] imageData)
         {
             Token.RefreshIfNecessary();
-            
+
             // Je m'occupe en premier de l'image si necessaire
             Boolean test = true;
             int? image_id = null;
@@ -486,7 +479,7 @@ namespace Fourplaces.Models
 
             var method = new HttpMethod("PATCH");
 
-            string content = "{\"first_name\": \"" + newFirstName + "\", \"last_name\": \"" + newLastName+"\"";
+            string content = "{\"first_name\": \"" + newFirstName + "\", \"last_name\": \"" + newLastName + "\"";
             if (image_id != null) // si une image est a patch
             {
                 content += ", \"image_id\":" + image_id;
@@ -524,5 +517,26 @@ namespace Fourplaces.Models
                 return (false, e.Message);
             }
         }
+        
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
+        private int GetDistanceBetweenPositions(Position source, Position dest)
+        {
+            int R = 6378;
+
+            double SourceLat = GetRadian(source.Latitude);
+            double SourceLong = GetRadian(source.Longitude);
+            double DestLat = GetRadian(dest.Latitude);
+            double DestLong = GetRadian(dest.Longitude);
+
+            return (int)(R * (Math.PI / 2 - Math.Asin(Math.Sin(DestLat) * Math.Sin(SourceLat) + Math.Cos(DestLong - SourceLong) * Math.Cos(DestLat) * Math.Cos(SourceLat))));
+        }
+
+        private double GetRadian(double degree)
+        {
+            return Math.PI * degree / 180;
+        }
+
     }
 }

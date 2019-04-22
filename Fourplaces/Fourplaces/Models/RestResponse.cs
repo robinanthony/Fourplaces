@@ -1,14 +1,12 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Text;
 
 namespace Fourplaces.Models
 {
     public class RestResponse
     {
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
         [JsonProperty(PropertyName = "is_success")]
         public string IsSuccess { get; set; }
 
@@ -21,8 +19,9 @@ namespace Fourplaces.Models
 
     public class RestResponse<T> : RestResponse
     {
-        //[JsonProperty(PropertyName = "data", DefaultValueHandling = DefaultValueHandling.Populate)]
-        //[DefaultValue(null)]
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
         [JsonProperty(PropertyName = "data")]
         public T Data { get; set; }
     }

@@ -7,6 +7,9 @@ namespace Fourplaces.Models
 {
     public class UserData : NotifierBase
     {
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
         private int? _idPicture;
         private ImageSource _imageSource;
 
@@ -39,25 +42,15 @@ namespace Fourplaces.Models
             }
         }
 
-        private async void UpdatePicture()
-        {
-            if (_idPicture == null)
-            {
-                ImageSource = ImageSource.FromFile("no_pic.jpg");
-            }
-            else
-            {
-                byte[] stream = await RestService.Rest.LoadPicture(IdPicture);
-                ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
-            }
-        }
-
         public ImageSource ImageSource
         {
             get => _imageSource;
             set => SetProperty(ref _imageSource, value);
         }
 
+//==============================================================================
+//============================== FCT PRINCIPALES ===============================
+//==============================================================================
         public UserData(string email, string password)
         {
             Email = email;
@@ -81,5 +74,22 @@ namespace Fourplaces.Models
             Email = email;
             IdPicture = image_id;
         }
+
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
+        private async void UpdatePicture()
+        {
+            if (_idPicture == null)
+            {
+                ImageSource = ImageSource.FromFile("no_pic.jpg");
+            }
+            else
+            {
+                byte[] stream = await RestService.Rest.LoadPicture(IdPicture);
+                ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
+            }
+        }
+
     }
 }

@@ -9,15 +9,16 @@ namespace Fourplaces.Models
 {
     public class Place : NotifierBase
     {
-        private int? _idPicture;
-        private ImageSource _imageSource;
-
+//==============================================================================
+//================================= ATTRIBUTS ==================================
+//==============================================================================
         [JsonProperty(PropertyName = "id")]
         public long Id { get; set; }
 
         [JsonProperty(PropertyName = "title")]
         public string Title { get; set; }
 
+        private int? _idPicture;
         [JsonProperty(PropertyName = "image_id", NullValueHandling = NullValueHandling.Include)]
         public int? IdPicture
         {
@@ -32,19 +33,7 @@ namespace Fourplaces.Models
             }
         }
 
-        private async void UpdatePicture()
-        {
-            if (_idPicture == null)
-            {
-                ImageSource = ImageSource.FromFile("no_pic.jpg");
-            }
-            else
-            {
-                byte[] stream = await RestService.Rest.LoadPicture(IdPicture);
-                ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
-            }
-        }
-
+        private ImageSource _imageSource;
         public ImageSource ImageSource
         {
             get => this._imageSource;
@@ -69,7 +58,8 @@ namespace Fourplaces.Models
         }
 
         private int _distance;
-        public int Distance {
+        public int Distance
+        {
             get
             {
                 return this._distance;
@@ -86,6 +76,22 @@ namespace Fourplaces.Models
         {
             get => this._texteDistance;
             set => SetProperty(ref this._texteDistance, value);
+        }
+
+//==============================================================================
+//============================== FCT SECONDAIRES ===============================
+//==============================================================================
+        private async void UpdatePicture()
+        {
+            if (_idPicture == null)
+            {
+                ImageSource = ImageSource.FromFile("no_pic.jpg");
+            }
+            else
+            {
+                byte[] stream = await RestService.Rest.LoadPicture(IdPicture);
+                ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
+            }
         }
 
         public static int Comparaison(Place p1, Place p2)
