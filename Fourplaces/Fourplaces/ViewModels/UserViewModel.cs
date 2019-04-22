@@ -4,6 +4,7 @@ using Plugin.Media.Abstractions;
 using Storm.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -16,87 +17,62 @@ namespace Fourplaces.ViewModels
         public Command TakeAnImage { get; private set; }
         public Command PatchMe { get; private set; }
         public Command PatchPassword { get; private set; }
-
-        private Boolean PatchDataNeeded;
+        
         private MediaFile _image;
+        private Boolean PicNeedPatch;
 
         private string _oldPassword;
         public string OldPassword
         {
-            get
-            {
-                return this._oldPassword;
-            }
-            set
-            {
-                SetProperty(ref this._oldPassword, value);
-            }
+            get => this._oldPassword;
+            set => SetProperty(ref this._oldPassword, value);
         }
 
         private string _newPassword;
         public string NewPassword
         {
-            get
-            {
-                return this._newPassword;
-            }
-            set
-            {
-                SetProperty(ref this._newPassword, value);
-            }
+            get => this._newPassword;
+            set => SetProperty(ref this._newPassword, value);
         }
 
         private string _newPasswordBis;
         public string NewPasswordBis
         {
-            get
-            {
-                return this._newPasswordBis;
-            }
-            set
-            {
-                SetProperty(ref this._newPasswordBis, value);
-            }
+            get => this._newPasswordBis;
+            set => SetProperty(ref this._newPasswordBis, value);
         }
 
         private string _newFirstName;
         public string NewFirstName
         {
-            get
-            {
-                return this._newFirstName;
-            }
-            set
-            {
-                SetProperty(ref this._newFirstName, value);
-                PatchDataNeeded = true;
-            }
+            get => this._newFirstName;
+            set => SetProperty(ref this._newFirstName, value);
         }
 
         private string _newLastName;
         public string NewLastName
         {
-            get
-            {
-                return this._newLastName;
-            }
-            set
-            {
-                SetProperty(ref this._newLastName, value);
-                PatchDataNeeded = true;
-            }
+            get => this._newLastName;
+            set => SetProperty(ref this._newLastName, value);
+        }
+
+        private ImageSource _newPicture;
+        public ImageSource NewPicture
+        {
+            get => this._newPicture;
+            set => SetProperty(ref this._newPicture, value);
         }
 
         private UserData _myUser;
         public UserData MyUser
         {
-            get
-            {
-                return this._myUser;
-            }
+            get => this._myUser;
             set
             {
                 SetProperty(ref this._myUser, value);
+                this.NewFirstName = this.MyUser.FirstName;
+                this.NewLastName = this.MyUser.LastName;
+                this.NewPicture = this.MyUser.ImageSource;
             }
         }
 
@@ -107,12 +83,8 @@ namespace Fourplaces.ViewModels
 
             if (test)
             {
-                MyUser = data;
-
-                NewFirstName = MyUser.FirstName;
-                NewLastName = MyUser.LastName;
-
-                PatchDataNeeded = false;
+                this.MyUser = data;
+                this.PicNeedPatch = false;
             }
             else
             {
@@ -135,11 +107,11 @@ namespace Fourplaces.ViewModels
 
         private async void PatchPwd()
         {
-            if (!string.IsNullOrWhiteSpace(NewPassword) && !string.IsNullOrWhiteSpace(NewPasswordBis) && !string.IsNullOrWhiteSpace(OldPassword))
+            if (!string.IsNullOrWhiteSpace(this.NewPassword) && !string.IsNullOrWhiteSpace(this.NewPasswordBis) && !string.IsNullOrWhiteSpace(this.OldPassword))
             {
                 if (NewPassword == NewPasswordBis)
                 {
-                    (Boolean test, string message) = await RestService.Rest.PatchPassword(OldPassword, NewPassword);
+                    (Boolean test, string message) = await RestService.Rest.PatchPassword(this.OldPassword, this.NewPassword);
 
                     if (test)
                     {
@@ -160,32 +132,48 @@ namespace Fourplaces.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Modification du mot de passe", "Votre mot de passe ne peut être vide.", "OK");
             }
 
-            OldPassword = "";
-            NewPassword = "";
-            NewPasswordBis = "";
+            this.OldPassword = "";
+            this.NewPassword = "";
+            this.NewPasswordBis = "";
         }
 
         private async void PatchUserData()
         {
-            // TODO
+            if ( this.PicNeedPatch)
+            { // Si l'image a été modifiée
+                MemoryStream memoryStream = new MemoryStream();
+                _image.GetStream().CopyTo(memoryStream);
+                byte[] pictureArray = memoryStream.ToArray();
+
+                (Boolean test, string message) = await RestService.Rest.PatchUser(NewFirstName, NewLastName, pictureArray);
+                await App.Current.MainPage.DisplayAlert("Mise à jour utilisateur", message, "OK");
+            }
+            else if (!this.MyUser.FirstName.Equals(this.NewFirstName) || !this.MyUser.LastName.Equals(this.NewLastName))
+            { // Si l'identité d'user a été modifié
+                (Boolean test, string message) = await RestService.Rest.PatchUser(NewFirstName, NewLastName, null);
+                await App.Current.MainPage.DisplayAlert("Mise à jour utilisateur", message, "OK");
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Mise à jour utilisateur", "Aucune modification détectée.", "OK");
+            }
         }
 
         private void UpdatePicture()
         {
             if (_image == null)
             {
-                MyUser.ImageSource = ImageSource.FromFile("no_pic.jpg");
+                this.NewPicture = ImageSource.FromFile("no_pic.jpg");
             }
             else
             {
-                MyUser.ImageSource = ImageSource.FromStream(() =>
+                this.NewPicture = ImageSource.FromStream(() =>
                 {
                     var stream = _image.GetStream();
-                    //_image.Dispose();
                     return stream;
                 });
             }
-            PatchDataNeeded = true;
+            this.PicNeedPatch = true;
         }
 
         private async void PhotoCommand()
@@ -194,23 +182,20 @@ namespace Fourplaces.ViewModels
 
             if (CrossMedia.Current.IsCameraAvailable || CrossMedia.Current.IsTakePhotoSupported)
             {
-                // Supply media options for saving our photo after it's taken.
                 var mediaOptions = new StoreCameraMediaOptions
                 {
-                    //Directory = "Receipts",
                     Name = DateTime.Now.ToShortTimeString() + ".jpg",
                     PhotoSize = PhotoSize.MaxWidthHeight,
                     MaxWidthHeight = 4096,
                     CompressionQuality = 75,
                     AllowCropping = true
                 };
-
-                // Take a photo of the business receipt.
+                
                 var file = await CrossMedia.Current.TakePhotoAsync(mediaOptions);
 
                 if (file != null)
                 {
-                    _image = file;
+                    this._image = file;
                     UpdatePicture();
                 }
             }
@@ -237,7 +222,7 @@ namespace Fourplaces.ViewModels
 
                 if (file != null)
                 {
-                    _image = file;
+                    this._image = file;
                     UpdatePicture();
                 }
             }

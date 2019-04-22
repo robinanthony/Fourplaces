@@ -12,14 +12,13 @@ A student's project with Xamarin technology.
     - Voir les informations liées à une place
     - Voir les commentaires liés à une place
     - Ajouter un commentaire
-    - Voir les informations liés à mon compte (TODO frontend!)
+    - Voir les informations liés à mon compte
     - Modifier le mot de passe lié à mon compte
+    - Modifier les informations liés à mon compte
     - Toute l'application est normalement accessible en format Paysage et
       Portrait.
 
 # Fonctionnalités non opérationnelles :
-    - Modifier les informations liés à mon compte : une interface éxiste mais
-      le bouton valider n'est pas opérationnel
 
 # Problèmes connues :
     - Si je fais défiler rapidement la page présentant toutes les places
@@ -34,7 +33,7 @@ A student's project with Xamarin technology.
       Je pense que le problème vient plus de mon appareil que de l'application
       mais je n'ai pas la possibilité de vérifier.
     - Lors de chaque requête REST, un refresh du token est effectué si cela
-      s'avère nécessaire (il reste moins de 10 minutes de validité).
+      s'avère nécessaire (càd qu'il reste moins de 10 minutes de validité).
       Hors, si le token est déjà expiré, il faudrait déconnecter
       l'utilisateur. Cette effet est manquant, ne sachant pas où mettre l'appel
       du popAsync().
@@ -45,4 +44,3 @@ A student's project with Xamarin technology.
     - Ordonner proprement les fonctions
     - Commenter les fonctions si necessaire
     - Retirer tous les using inutiles
-    - Vérifier que tout le code est uniforme (TOUT le code en anglais !)

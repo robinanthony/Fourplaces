@@ -69,7 +69,6 @@ namespace Fourplaces.ViewModels
                 ImageSource = ImageSource.FromStream(() =>
                 {
                     var stream = _image.GetStream();
-                    //_image.Dispose();
                     return stream;
                 });
             }

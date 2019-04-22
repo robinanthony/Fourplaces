@@ -39,27 +39,26 @@
         <ScrollView>
             <StackLayout Orientation="Vertical" Margin="20,15,20,20">
                 <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
-                    <Label Text="Prenom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                    <Entry Text="{Binding NewFirstName, Mode=TwoWay}" 
-                           Placeholder="Prenom"/>
-                    
-                    <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
-                    <Entry Text="{Binding NewLastName, Mode=TwoWay}" 
-                           Placeholder="Nom"/>
-                </StackLayout>
-                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
                     <Label Text="Image de profil :" TextColor="Black" FontSize="20" Margin="0,0,0,5" />
                     <Image HorizontalOptions="Start"
                            VerticalOptions="Center"
                            HeightRequest="200"
                            WidthRequest="320"
-                           Source="{Binding MyUser.ImageSource}"/>
-                </StackLayout>
-                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                           Source="{Binding NewPicture}"/>
                     <Button Text="Prendre une photo" 
                             Command="{Binding TakeAPhoto}"/>
                     <Button Text="Choisir une image existante" 
                             Command="{Binding TakeAnImage}"/>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="0,0,0,10">
+                    <Label Text="Prenom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Entry Text="{Binding NewFirstName, Mode=TwoWay}" 
+                           Placeholder="Prenom"/>
+
+                    <Label Text="Nom" TextColor="Black" FontSize="20" Margin="0,0,0,5"/>
+                    <Entry Text="{Binding NewLastName, Mode=TwoWay}" 
+                           Placeholder="Nom"/>
 
                     <Button Text="Valider" 
                             Command="{Binding PatchMe}"/>

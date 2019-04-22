@@ -11,7 +11,6 @@ namespace Fourplaces.Models
     {
         private int? _idPicture;
         private ImageSource _imageSource;
-        //private string _imageSource;
 
         [JsonProperty(PropertyName = "id")]
         public long Id { get; set; }
@@ -34,18 +33,15 @@ namespace Fourplaces.Models
         }
 
         private async void UpdatePicture()
-        //private void UpdatePicture()
         {
             if (_idPicture == null)
             {
                 ImageSource = ImageSource.FromFile("no_pic.jpg");
-                ImageSource = "no_pic.jpg";
             }
             else
             {
                 byte[] stream = await RestService.Rest.LoadPicture(IdPicture);
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(stream));
-                //ImageSource = "https://td-api.julienmialon.com/images/" + _idPicture;
             }
         }
 
@@ -54,12 +50,6 @@ namespace Fourplaces.Models
             get => this._imageSource;
             set => SetProperty(ref _imageSource, value);
         }
-
-        //public string ImageSource
-        //{
-        //    get => this._imageSource;
-        //    set => SetProperty(ref _imageSource, value);
-        //}
 
         [JsonProperty(PropertyName = "comments")]
         public ObservableCollection<Commentaire> Commentaires { get; set; }

@@ -465,51 +465,64 @@ namespace Fourplaces.Models
             }
         }
 
-        //private static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, string requestUri, HttpContent content, CancellationToken cancellationToken)
-        //{
-        //    var method = new HttpMethod("PATCH");
-        //    var request = new HttpRequestMessage(method, requestUri)
-        //    {
-        //        Content = content
-        //    };
-
-        //    var response = await client.SendAsync(request, cancellationToken);
-        //    return response;
-        //}
-
-
-        //    try
-        //    {
-        //        var response = await client.SendAsync(request);
-
-        //        var json = await response.Content.ReadAsStringAsync();
-        //        RestResponse restResponse = JsonConvert.DeserializeObject<RestResponse>(json);
+        public async Task<(Boolean, string)> PatchUser(string newFirstName, string newLastName, byte[] imageData)
+        {
+            Token.RefreshIfNecessary();
+            
+            // Je m'occupe en premier de l'image si necessaire
+            Boolean test = true;
+            int? image_id = null;
+            if (imageData != null)
+            {
+                (test, image_id) = await AddPicture(imageData);
+            }
+            if (!test) // S'il y'a eu un problème avec l'upload de l'image
+            {
+                return (false, "Une erreur est survenue lors de l'envoie de l'image. Merci de réessayer.");
+            }
 
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            if ("true".Equals(restResponse.IsSuccess))
-        //            {
-        //                return (true, "Ajout de la place effectué.");
-        //            }
-        //            else
-        //            {
-        //                return (false, "Votre place n'a pû être ajouté. " + restResponse.ErrorMessage);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return (false, "Erreur lors de la tentative d'ajout d'une place. " + restResponse.ErrorMessage + " Veuillez réessayer.");
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return (false, "Erreur lors de la tentative d'ajout d'une place." + e.Message + " Veuillez réessayer.");
-        //    }
-        //}
-        //else
-        //{
-        //    return (false, "Une erreur est survenue lors de l'envoie de l'image. Merci de réessayer.");
-        //}
+            string RestUrl = "https://td-api.julienmialon.com/me";
+
+            var method = new HttpMethod("PATCH");
+
+            string content = "{\"first_name\": \"" + newFirstName + "\", \"last_name\": \"" + newLastName+"\"";
+            if (image_id != null) // si une image est a patch
+            {
+                content += ", \"image_id\":" + image_id;
+            }
+            content += "}";
+
+            HttpRequestMessage request = new HttpRequestMessage(method, RestUrl)
+            {
+                Content = new StringContent(content, Encoding.UTF8, "application/json")
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue(Token.Ticket.TokenType, Token.Ticket.AccessToken);
+
+            try
+            {
+                var response = await client.SendAsync(request);
+
+                var json = await response.Content.ReadAsStringAsync();
+                RestResponse restResponse = JsonConvert.DeserializeObject<RestResponse>(json);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return ("true".Equals(restResponse.IsSuccess), "Modification(s) effectuée(s).");
+                }
+                else
+                {
+                    Console.WriteLine(request);
+                    Console.WriteLine(content);
+                    Console.WriteLine(response);
+                    return (false, restResponse.ErrorMessage);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return (false, e.Message);
+            }
+        }
     }
 }
